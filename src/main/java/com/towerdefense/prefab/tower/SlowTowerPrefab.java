@@ -1,0 +1,19 @@
+package com.towerdefense.prefab.tower;
+
+import com.towerdefense.entity.tower.fire.FireStrategy;
+import com.towerdefense.entity.tower.fire.SingleShotStrategy;
+import com.towerdefense.prefab.projectile.SlowProjectilePrefab;
+
+import javafx.scene.paint.Color;
+
+public class SlowTowerPrefab extends TowerPrefab {
+    @Override
+    protected Color color() {
+        return Color.web("#1ebff5");
+    }
+
+    @Override
+    protected FireStrategy createFireStrategy() {
+        return new SingleShotStrategy(new SlowProjectilePrefab());
+    }
+}

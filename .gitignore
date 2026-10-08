@@ -1,0 +1,17 @@
+# Build output
+target/
+out/
+build/
+
+# Java compiler temporary files
+*.args
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Eclipse
+.classpath
+.project
+.settings/
