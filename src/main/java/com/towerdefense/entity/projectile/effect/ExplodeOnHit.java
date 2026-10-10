@@ -2,16 +2,26 @@ package com.towerdefense.entity.projectile.effect;
 
 import com.towerdefense.behaviour.Health;
 import com.towerdefense.core.GameObject;
+import com.towerdefense.core.Prefab;
 import com.towerdefense.core.Vector2;
 import com.towerdefense.core.World;
 
 public class ExplodeOnHit extends HitEffectDecorator {
+    private static final double VISUAL_DURATION = 0.3;
+
     private final double radius, damage;
+    private final Prefab explosionFx;
 
     public ExplodeOnHit(HitEffect inner, double radius, double damage) {
+        this(inner, radius, damage, new ExplosionPrefab(radius, VISUAL_DURATION));
+    }
+
+    /** @param explosionFx prefab hiệu ứng vòng nổ; truyền prefab có pool để tái sử dụng. */
+    public ExplodeOnHit(HitEffect inner, double radius, double damage, Prefab explosionFx) {
         super(inner);
         this.radius = radius;
         this.damage = damage;
+        this.explosionFx = explosionFx;
     }
 
     @Override
@@ -28,10 +38,6 @@ public class ExplodeOnHit extends HitEffectDecorator {
             }
         }
 
-        world.instantiate(() -> {
-            GameObject fx = new GameObject();
-            fx.addBehaviour(new ExplosionVisual(radius, 0.3));
-            return fx;
-        }, center);
+        world.instantiate(explosionFx, center);
     }
 }
