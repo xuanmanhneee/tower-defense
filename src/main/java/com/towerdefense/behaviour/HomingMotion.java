@@ -18,6 +18,12 @@ public class HomingMotion extends Behaviour {
     }
 
     @Override
+    public void onReset() {
+        target = null;
+        lastDirection = null;
+    }
+
+    @Override
     public void update(double dt) {
         Vector2 pos = gameObject.getTransform().getPosition();
         if (target != null && target.isAlive()) {

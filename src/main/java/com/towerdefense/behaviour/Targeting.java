@@ -22,6 +22,11 @@ public class Targeting extends Behaviour {
     }
 
     @Override
+    public void onReset() {
+        currentTarget = null;
+    }
+
+    @Override
     public void update(double deltaTime) {
         currentTarget = findClosestEnemy();
     }

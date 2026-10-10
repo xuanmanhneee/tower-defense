@@ -33,6 +33,12 @@ public class Health extends Behaviour {
         return currentHealth <= 0;
     }
 
+    /** Khôi phục đầy máu. Callback {@code onDeath} là cấu hình nên được giữ nguyên. */
+    @Override
+    public void onReset() {
+        currentHealth = maxHealth;
+    }
+
     public void setOnDeath(Runnable onDeath) {
         this.onDeath = onDeath;
     }
