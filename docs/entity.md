@@ -10,7 +10,7 @@ abstract class FireStrategyDecorator implements FireStrategy { protected FireStr
 
 | Class | Constructor | Mô tả |
 |---|---|---|
-| `SingleShotStrategy` | `(ProjectilePrefab)` | Tạo 1 đạn và `launch` về mục tiêu. |
+| `SingleShotStrategy` | `(Prefab projectile)` | Tạo 1 đạn và `launch` về mục tiêu. Nhận prefab thường hoặc `PooledPrefab`. |
 | `SpreadShotDecorator` | `(FireStrategy main, FireStrategy sideShot, int extraShotsEachSide, double spreadAngleDegrees)` | Bắn `main` + các viên lệch góc hai bên bằng `sideShot`. |
 
 ## projectile.effect — Decorator
@@ -22,7 +22,8 @@ abstract class HitEffectDecorator implements HitEffect { protected HitEffectDeco
 | Class | Constructor | Mô tả |
 |---|---|---|
 | `DamageOnHit` | `(double damage)` | Gây sát thương lên `Health` của mục tiêu. |
-| `ExplodeOnHit` | `(HitEffect inner, double radius, double damage)` | `inner` + sát thương lan trong bán kính lên mọi object có `Health` + tạo `ExplosionVisual`. |
+| `ExplodeOnHit` | `(HitEffect inner, double radius, double damage)` / `(…, Prefab explosionFx)` | `inner` + sát thương lan trong bán kính lên mọi object có `Health` + tạo hiệu ứng vòng nổ từ `explosionFx` (mặc định `ExplosionPrefab` không pool; truyền `PooledPrefab` để tái sử dụng). |
+| `ExplosionPrefab` | `(double radius, double duration)` | `Prefab` chứa một `ExplosionVisual`. |
 | `SlowOnHit` | `(HitEffect inner, double factor, double duration)` | `inner` + thêm làm chậm vào `SpeedModifiers`. |
 | `ExplosionVisual` | `(double maxRadius, double duration)` | `RenderBehaviour` (layer `OVERLAY`), tự huỷ khi hết thời gian. |
 

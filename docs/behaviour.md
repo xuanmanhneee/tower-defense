@@ -2,6 +2,8 @@
 
 Package `com.towerdefense.behaviour`. Tất cả extends `Behaviour`.
 
+`onReset()` (khi object được tái sử dụng từ pool) đã cài cho: `Health` (đầy máu, giữ `onDeath`), `PathFollower` (về waypoint đầu, giữ danh sách), `FireControl` (cooldown 0), `Targeting` (xoá mục tiêu), `HomingMotion` (xoá mục tiêu/hướng), `AutoDestroy` (đếm lại), `LinearMotion`, `TravelLimit`, `SpeedModifiers`.
+
 | Class | Constructor | API / hành vi |
 |---|---|---|
 | `Health` | `(double maxHealth)` | `getHealth()`, `getMaxHealth()`, `getRatio()`, `isDead()`, `damage(double)`, `setOnDeath(Runnable)`. Về 0 → `destroy()` + chạy `onDeath`. |

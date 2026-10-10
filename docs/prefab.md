@@ -33,10 +33,10 @@ Sau `instantiate`, cần `getBehaviour(PathFollower.class).setWaypoints(...)` (d
 
 | Class | FireStrategy |
 |---|---|
-| `BasicTowerPrefab` | `SingleShotStrategy(BasicProjectilePrefab)` |
-| `SpreadTowerPrefab` | `SpreadShotDecorator` (1 viên mỗi bên, 15°) |
-| `SlowTowerPrefab` | `SingleShotStrategy(SlowProjectilePrefab)` |
-| `ExplosiveTowerPrefab` | `SingleShotStrategy(ExplosiveProjectilePrefab)` |
+| `BasicTowerPrefab` | `SingleShotStrategy(ProjectilePools.BASIC)` |
+| `SpreadTowerPrefab` | `SpreadShotDecorator` (`BASIC` + `BASIC_WEAK`, 1 viên mỗi bên, 15°) |
+| `SlowTowerPrefab` | `SingleShotStrategy(ProjectilePools.SLOW)` |
+| `ExplosiveTowerPrefab` | `SingleShotStrategy(ProjectilePools.EXPLOSIVE)` |
 
 ## projectile — Template Method
 `abstract class ProjectilePrefab implements Prefab`
@@ -55,4 +55,14 @@ Sau `instantiate`, cần `getBehaviour(PathFollower.class).setWaypoints(...)` (d
 |---|---|---|
 | `BasicProjectilePrefab(double damage = 10)` | 500 | `DamageOnHit` |
 | `SlowProjectilePrefab` | 450 | `SlowOnHit(DamageOnHit(6), 0.5, 2.0)` |
-| `ExplosiveProjectilePrefab` | 380 | `ExplodeOnHit(DamageOnHit(15), 128, 8)` |
+| `ExplosiveProjectilePrefab` | 380 | `ExplodeOnHit(DamageOnHit(15), 128, 8, pooled ExplosionPrefab)` |
+
+### ProjectilePools
+`final class ProjectilePools` — các `PooledPrefab` đạn dùng chung (tạo sẵn 16 object mỗi pool). Mọi tháp cùng loại dùng chung một pool.
+
+| Hằng | Nguồn |
+|---|---|
+| `BASIC` | `BasicProjectilePrefab(10)` |
+| `BASIC_WEAK` | `BasicProjectilePrefab(3)` (đạn phụ của Spread) |
+| `SLOW` | `SlowProjectilePrefab` |
+| `EXPLOSIVE` | `ExplosiveProjectilePrefab` |
