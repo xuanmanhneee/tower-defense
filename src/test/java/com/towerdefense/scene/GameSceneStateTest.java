@@ -9,6 +9,7 @@ import com.towerdefense.core.Behaviour;
 import com.towerdefense.core.GameObject;
 import com.towerdefense.core.Vector2;
 import com.towerdefense.entity.tower.TowerType;
+import com.towerdefense.event.DeathEvent;
 import com.towerdefense.event.GameOverEvent;
 import com.towerdefense.game.GameState;
 import org.junit.jupiter.api.Test;
@@ -107,7 +108,21 @@ class GameSceneStateTest {
         assertTrue(game.isGameOver());
         assertFalse(game.isPaused());
         assertEquals(0, GameState.getInstance().getLives());
+        assertEquals(0, game.getSessionStats().getEnemiesDefeated());
+        assertEquals(0, game.getSessionStats().getGoldEarned());
         assertFalse(game.tryPlaceTower(96, 192, TowerType.BASIC));
+    }
+
+    @Test
+    void enemyDeathRewardUpdatesSessionStatsAndGameGold() {
+        GameScene game = new GameScene();
+        int startingGold = GameState.getInstance().getGold();
+
+        game.getScene().getEventBus().publish(new DeathEvent(new GameObject(), 12));
+
+        assertEquals(1, game.getSessionStats().getEnemiesDefeated());
+        assertEquals(12, game.getSessionStats().getGoldEarned());
+        assertEquals(startingGold + 12, GameState.getInstance().getGold());
     }
 
     @Test

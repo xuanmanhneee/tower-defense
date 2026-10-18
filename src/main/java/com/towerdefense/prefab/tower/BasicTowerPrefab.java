@@ -19,6 +19,11 @@ public class BasicTowerPrefab extends TowerPrefab {
     }
 
     @Override
+    protected com.towerdefense.entity.tower.TowerType towerType() {
+        return com.towerdefense.entity.tower.TowerType.BASIC;
+    }
+
+    @Override
     protected Color color() {
         return Color.web("#eef51e");
     }

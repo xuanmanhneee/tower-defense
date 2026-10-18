@@ -18,6 +18,11 @@ public class SlowTowerPrefab extends TowerPrefab {
     }
 
     @Override
+    protected com.towerdefense.entity.tower.TowerType towerType() {
+        return com.towerdefense.entity.tower.TowerType.SLOW;
+    }
+
+    @Override
     protected Color color() {
         return Color.web("#1ebff5");
     }

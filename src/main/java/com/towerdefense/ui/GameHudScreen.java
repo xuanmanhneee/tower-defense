@@ -1,7 +1,5 @@
 package com.towerdefense.ui;
 
-import com.towerdefense.config.GameConfig;
-import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import com.towerdefense.entity.tower.TowerType;
@@ -9,22 +7,17 @@ import com.towerdefense.game.GameState;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
 
 public class GameHudScreen implements UIScreen {
 
     private final GameState gameState;
     private final Supplier<TowerType> selectedTower;
-    private final BooleanSupplier paused;
 
     public GameHudScreen(
             GameState gameState,
-            Supplier<TowerType> selectedTower,
-            BooleanSupplier paused) {
+            Supplier<TowerType> selectedTower) {
         this.gameState = gameState;
         this.selectedTower = selectedTower;
-        this.paused = paused;
     }
 
     @Override
@@ -34,58 +27,92 @@ public class GameHudScreen implements UIScreen {
     @Override
     public void render(GraphicsContext graphics) {
 
-        // HUD background
-        graphics.setFill(Color.rgb(0, 0, 0, 0.7));
-        graphics.fillRect(20, 20, 240, 125);
+        double panelX = 20;
+        double panelY = 20;
+        double panelWidth = 260;
+        double panelHeight = 125;
 
-        // HUD text
+        // Panel background - matching Choose Tower panel style
+        graphics.setFill(Color.rgb(30, 30, 30, 0.95));
+        graphics.fillRoundRect(
+                panelX,
+                panelY,
+                panelWidth,
+                panelHeight,
+                15,
+                15
+        );
+
+        // Header Title
         graphics.setFill(Color.WHITE);
-        graphics.fillText("TOWER DEFENSE", 40, 45);
-        graphics.fillText("Gold: " + gameState.getGold(), 40, 70);
+        graphics.fillText(
+                "Tower Defense",
+                panelX + 20,
+                panelY + 26
+        );
 
+        // Row 1: Two cards (Gold & Base HP) side by side
+        double row1Y = panelY + 38;
+        double cardW = (panelWidth - 35) / 2.0;
+
+        // Gold Card
+        graphics.setFill(Color.rgb(60, 60, 60));
+        graphics.fillRoundRect(
+                panelX + 15,
+                row1Y,
+                cardW,
+                32,
+                8,
+                8
+        );
+        graphics.setFill(Color.WHITE);
+        graphics.fillText("Gold: " + gameState.getGold(), panelX + 23, row1Y + 20);
+
+        // Base HP Card
+        graphics.setFill(Color.rgb(60, 60, 60));
+        graphics.fillRoundRect(
+                panelX + 20 + cardW,
+                row1Y,
+                cardW,
+                32,
+                8,
+                8
+        );
+        graphics.setFill(Color.WHITE);
+        graphics.fillText("HP: " + gameState.getLives(), panelX + 28 + cardW, row1Y + 20);
+
+        // Row 2: Selected Tower Action Card (matching active blue highlight)
+        double row2Y = panelY + 76;
         TowerType tower = selectedTower.get();
         String action = tower.requiresExistingTower() ? "Upgrade" : "Build";
+
+        graphics.setFill(Color.rgb(40, 115, 180));
+        graphics.fillRoundRect(
+                panelX + 15,
+                row2Y,
+                panelWidth - 30,
+                34,
+                8,
+                8
+        );
+
+        graphics.setFill(Color.WHITE);
         graphics.fillText(
-                action + ": " + tower.getDisplayName() + " ($" + tower.getCost() + ")",
-                40,
-                95);
+                action + ": " + tower.getDisplayName(),
+                panelX + 25,
+                row2Y + 21
+        );
 
-        graphics.fillText("Base HP: " + gameState.getLives(), 40, 120);
+        graphics.fillText(
+                "$" + tower.getCost(),
+                panelX + panelWidth - 55,
+                row2Y + 21
+        );
 
-        if (paused.getAsBoolean()) {
-            graphics.save();
-            graphics.setFill(Color.rgb(0, 0, 0, 0.72));
-            graphics.fillRect(0, 0, GameConfig.WINDOW_WIDTH, GameConfig.WINDOW_HEIGHT);
-
-            graphics.setFill(Color.WHITE);
-            graphics.setTextAlign(TextAlignment.CENTER);
-            graphics.setFont(Font.font(32));
-            graphics.fillText(
-                    "PAUSED",
-                    GameConfig.WINDOW_WIDTH / 2.0,
-                    GameConfig.WINDOW_HEIGHT / 2.0 - 8);
-            graphics.setFont(Font.font(18));
-            graphics.fillText(
-                    "Press Esc to resume",
-                    GameConfig.WINDOW_WIDTH / 2.0,
-                    GameConfig.WINDOW_HEIGHT / 2.0 + 24);
-            graphics.restore();
-        }
-
-        if (gameState.isGameOver()) {
-            graphics.setFill(Color.rgb(0, 0, 0, 0.72));
-            graphics.fillRect(0, 0, GameConfig.WINDOW_WIDTH, GameConfig.WINDOW_HEIGHT);
-
-            graphics.setFill(Color.WHITE);
-            graphics.fillText(
-                    "GAME OVER",
-                    GameConfig.WINDOW_WIDTH / 2.0 - 45,
-                    GameConfig.WINDOW_HEIGHT / 2.0);
-        }
     }
 
     @Override
     public boolean handleClick(double x, double y) {
-        return gameState.isGameOver();
+        return false;
     }
 }

@@ -13,11 +13,16 @@ import com.towerdefense.entity.tower.TowerType;
 import com.towerdefense.game.GameState;
 import com.towerdefense.map.GameMap;
 import com.towerdefense.map.MapFactory;
+import com.towerdefense.core.Prefab;
 import com.towerdefense.prefab.GoalPrefab;
 import com.towerdefense.prefab.enemy.GruntEnemyPrefab;
+import com.towerdefense.prefab.enemy.ScoutEnemyPrefab;
+import com.towerdefense.prefab.enemy.TankEnemyPrefab;
 import com.towerdefense.prefab.tower.TowerFactory;
+import com.towerdefense.game.GameSessionStats;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class GameScene {
@@ -27,6 +32,7 @@ public class GameScene {
     private final CollisionSystem collisionSystem = new CollisionSystem();
     private final EnemySpawner enemySpawner;
     private final Map<BlockPosition, PlacedTower> placedTowers = new HashMap<>();
+    private final GameSessionStats sessionStats = new GameSessionStats();
 
     private GameObject goal;
     private GamePhase phase = new PlayingState();
@@ -35,10 +41,17 @@ public class GameScene {
         GameState.getInstance().reset();
         map = MapFactory.createLevel1Map();
 
-        enemySpawner = new EnemySpawner(scene, new PooledPrefab(new GruntEnemyPrefab(), 32), map.getWaypoints(), 1.6);
+        List<Prefab> enemyPools = List.of(
+                new PooledPrefab(new GruntEnemyPrefab(), 32),
+                new PooledPrefab(new ScoutEnemyPrefab(), 32),
+                new PooledPrefab(new TankEnemyPrefab(), 16)
+        );
+        enemySpawner = new EnemySpawner(scene, enemyPools, map.getWaypoints(), 1.6);
 
-        scene.getEventBus().subscribe(DeathEvent.class,
-                event -> GameState.getInstance().addGold(event.reward()));
+        scene.getEventBus().subscribe(DeathEvent.class, event -> {
+            sessionStats.recordEnemyDefeated(event.reward());
+            GameState.getInstance().addGold(event.reward());
+        });
         scene.getEventBus().subscribe(GameOverEvent.class,
                 event -> phase = new GameOverState());
 
@@ -153,6 +166,10 @@ public class GameScene {
 
     public boolean isGameOver() {
         return phase.isGameOver();
+    }
+
+    public GameSessionStats getSessionStats() {
+        return sessionStats;
     }
 
     public void togglePause() {
