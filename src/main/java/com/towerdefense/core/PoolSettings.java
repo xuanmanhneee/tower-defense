@@ -2,7 +2,8 @@ package com.towerdefense.core;
 
 /**
  * Cờ bật/tắt Object Pool lúc chạy, áp dụng cho mọi {@link ObjectPool}.
- * Tắt: {@code obtain} luôn tạo object mới và object bị huỷ không được giữ lại.
+ * Tắt: xoá object đang rảnh, {@code obtain} luôn tạo object mới và object bị huỷ
+ * không được giữ lại.
  * Mặc định bật.
  */
 public final class PoolSettings {
@@ -16,6 +17,12 @@ public final class PoolSettings {
     }
 
     public static void setEnabled(boolean value) {
+        if (enabled == value) {
+            return;
+        }
         enabled = value;
+        if (!value) {
+            ObjectPool.clearAll();
+        }
     }
 }

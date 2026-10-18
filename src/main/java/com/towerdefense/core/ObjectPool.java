@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.IdentityHashMap;
 import java.util.Set;
+import java.util.WeakHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
 
 /**
@@ -12,6 +14,11 @@ import java.util.function.Supplier;
  * Object lấy từ pool tự trả về khi bị huỷ ({@link ReturnToPool}).
  */
 public class ObjectPool {
+    private static final AtomicLong totalCreated = new AtomicLong();
+    private static final AtomicLong totalReused = new AtomicLong();
+    private static final Set<ObjectPool> registeredPools =
+            Collections.newSetFromMap(new WeakHashMap<>());
+
     private final Supplier<GameObject> factory;
     private final int maxSize;
     private final Deque<GameObject> free = new ArrayDeque<>();
@@ -32,6 +39,9 @@ public class ObjectPool {
         }
         this.factory = factory;
         this.maxSize = maxSize;
+        synchronized (registeredPools) {
+            registeredPools.add(this);
+        }
     }
 
     /** Tạo sẵn tối đa {@code count} object rảnh (không vượt maxSize). */
@@ -53,6 +63,7 @@ public class ObjectPool {
     public GameObject obtain(Vector2 position) {
         if (!PoolSettings.isEnabled()) {
             GameObject unpooled = factory.get();
+            totalCreated.incrementAndGet();
             unpooled.getTransform().setPosition(position);
             return unpooled;
         }
@@ -60,6 +71,7 @@ public class ObjectPool {
         if (obj != null) {
             freeSet.remove(obj);
             reused++;
+            totalReused.incrementAndGet();
             obj.reset(position);
             return obj;
         }
@@ -71,6 +83,7 @@ public class ObjectPool {
         obj.getTransform().setPosition(position);
         obj.addBehaviour(new ReturnToPool(this)); // luôn là Behaviour cuối cùng
         created++;
+        totalCreated.incrementAndGet();
         return obj;
     }
 
@@ -86,6 +99,20 @@ public class ObjectPool {
         freeSet.add(obj);
     }
 
+    private void clear() {
+        discarded += free.size();
+        free.clear();
+        freeSet.clear();
+    }
+
+    static void clearAll() {
+        synchronized (registeredPools) {
+            for (ObjectPool pool : registeredPools) {
+                pool.clear();
+            }
+        }
+    }
+
     /** Tổng số object đã tạo bằng factory. */
     public int getCreatedCount() { return created; }
 
@@ -97,6 +124,18 @@ public class ObjectPool {
 
     /** Số object đang được sử dụng (đã lấy, chưa trả, chưa bị bỏ). */
     public int getActiveCount() { return created - free.size() - discarded; }
+
+    /** Tổng số object mới mà tất cả pool đã tạo, kể cả khi pooling bị tắt. */
+    public static long getTotalCreatedCount() { return totalCreated.get(); }
+
+    /** Tổng số lần tất cả pool tái sử dụng object. */
+    public static long getTotalReusedCount() { return totalReused.get(); }
+
+    /** Bắt đầu lại cửa sổ thống kê dùng cho debug UI. */
+    public static void resetTotalCounts() {
+        totalCreated.set(0);
+        totalReused.set(0);
+    }
 
     private static class ReturnToPool extends Behaviour {
         private final ObjectPool pool;

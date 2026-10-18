@@ -95,17 +95,23 @@ class PoolSettingsTest {
     }
 
     @Test
-    void togglingBetweenFramesKeepsPoolConsistent() {
+    void disablingClearsFreeObjectsAndReenableStartsFresh() {
         GameObject a = spawn();
         destroy(a);
         assertEquals(1, pool.getFreeCount());
 
         PoolSettings.setEnabled(false);
-        GameObject b = spawn(); // không lấy a ra khỏi pool khi đang tắt
+        assertEquals(0, pool.getFreeCount());
+
+        GameObject b = spawn();
         assertNotSame(a, b);
-        assertEquals(1, pool.getFreeCount());
 
         PoolSettings.setEnabled(true);
-        assertSame(a, spawn()); // bật lại thì a được dùng lại
+        GameObject c = spawn();
+
+        assertNotSame(a, c);
+        assertNotSame(b, c);
+        assertEquals(2, pool.getCreatedCount());
+        assertEquals(0, pool.getReusedCount());
     }
 }

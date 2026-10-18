@@ -76,7 +76,7 @@ class BehaviourResetTest {
 
         GameObject tower = new GameObject();
         Targeting targeting = tower.addBehaviour(new Targeting(100));
-        FireControl fc = tower.addBehaviour(new FireControl(targeting, (origin, dir, t, w) -> shots[0]++, 10));
+        tower.addBehaviour(new FireControl(targeting, (origin, dir, t, w) -> shots[0]++, 10));
         scene.instantiate(() -> tower);
         scene.update(0.1); // đưa vào Scene
         scene.update(0.1); // Targeting tìm mục tiêu, FireControl bắn -> cooldown 10s

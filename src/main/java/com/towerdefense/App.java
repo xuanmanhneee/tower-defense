@@ -1,12 +1,15 @@
 package com.towerdefense;
 
 import com.towerdefense.config.GameConfig;
+import com.towerdefense.debug.DebugMetrics;
 import com.towerdefense.entity.tower.TowerType;
 import com.towerdefense.game.GameState;
 import com.towerdefense.render.GameRenderer;
 import com.towerdefense.render.MapRenderer;
 import com.towerdefense.scene.GameScene;
 import com.towerdefense.ui.GameHudScreen;
+import com.towerdefense.ui.DebugPanelScreen;
+import com.towerdefense.ui.FpsOverlayScreen;
 import com.towerdefense.ui.TowerOption;
 import com.towerdefense.ui.TowerSelectionScreen;
 import com.towerdefense.ui.UIManager;
@@ -53,6 +56,10 @@ public class App extends Application {
                 GameState.getInstance(),
                 towerSelection::getSelectedTower));
 
+        DebugPanelScreen debugPanel = new DebugPanelScreen(DebugMetrics.getInstance());
+        uiManager.addScreen(debugPanel);
+        uiManager.addScreen(new FpsOverlayScreen());
+
         gameCanvas.setOnMouseClicked(event -> {
             if (!uiManager.handleClick(event.getX(), event.getY())) {
                 gameScene.tryPlaceTower(
@@ -70,6 +77,7 @@ public class App extends Application {
                 uiCanvas);
 
         javafx.scene.Scene fxScene = new javafx.scene.Scene(root, WIDTH, HEIGHT);
+        fxScene.setOnKeyPressed(event -> debugPanel.handleKeyPressed(event.getCode()));
 
         stage.setTitle("Tower Defense");
         stage.setResizable(false);
@@ -86,7 +94,8 @@ public class App extends Application {
                     return;
                 }
 
-                double deltaTime = Math.min((now - lastTime) / 1_000_000_000.0, 0.05);
+                double frameDeltaTime = (now - lastTime) / 1_000_000_000.0;
+                double deltaTime = Math.min(frameDeltaTime, 0.05);
 
                 lastTime = now;
 
@@ -100,7 +109,7 @@ public class App extends Application {
 
 
                 // UI
-                uiManager.update(deltaTime);
+                uiManager.update(frameDeltaTime);
 
                 uiGraphics.clearRect(0, 0, WIDTH, HEIGHT);
 

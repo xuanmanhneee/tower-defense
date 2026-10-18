@@ -5,6 +5,9 @@ import com.towerdefense.entity.tower.TowerType;
 public record TowerOption(TowerType type) {
 
     public String name() {
+        if (type.requiresExistingTower()) {
+            return type.getDisplayName() + " upgrade";
+        }
         return type.getDisplayName();
     }
 

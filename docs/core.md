@@ -112,9 +112,9 @@ Giữ một instance dùng chung; tạo mới mỗi lần thì pool vô tác d�
 | Member | Mô tả |
 |---|---|
 | `static boolean isEnabled()` | Mặc định `true`. |
-| `static void setEnabled(boolean)` | Có hiệu lực từ lần `obtain`/`release` kế tiếp. |
+| `static void setEnabled(boolean)` | Khi tắt, xoá ngay tất cả object đang rảnh trong các pool. |
 
-Khi tắt: `obtain` luôn tạo object mới (không gắn với pool, không được đếm); object của pool bị huỷ thì bị bỏ thay vì giữ lại. Bật lại thì pool dùng tiếp các object còn rảnh.
+Khi tắt: `obtain` luôn tạo object mới không gắn với pool; object active bị huỷ thì bị bỏ thay vì giữ lại. Khi bật lại, pool bắt đầu rỗng nên lần `obtain` đầu tiên phải tạo object mới.
 
 ## Quy ước tái sử dụng
 ```

@@ -36,8 +36,9 @@ public class GameHudScreen implements UIScreen {
         graphics.fillText("Gold: " + gameState.getGold(), 40, 70);
 
         TowerType tower = selectedTower.get();
+        String action = tower.requiresExistingTower() ? "Upgrade" : "Build";
         graphics.fillText(
-                "Selected: " + tower.getDisplayName() + " ($" + tower.getCost() + ")",
+                action + ": " + tower.getDisplayName() + " ($" + tower.getCost() + ")",
                 40,
                 95);
 
