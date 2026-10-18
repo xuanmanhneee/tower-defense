@@ -3,6 +3,7 @@ package com.towerdefense.scene;
 import com.towerdefense.collision.CollisionSystem;
 import com.towerdefense.config.GameConfig;
 import com.towerdefense.core.GameObject;
+import com.towerdefense.core.PooledPrefab;
 import com.towerdefense.core.Scene;
 import com.towerdefense.core.Vector2;
 import com.towerdefense.behaviour.Health;
@@ -30,7 +31,7 @@ public class GameScene {
         GameState.getInstance().reset();
         map = MapFactory.createLevel1Map();
 
-        enemySpawner = new EnemySpawner(scene, new GruntEnemyPrefab(), map.getWaypoints(), 1.6);
+        enemySpawner = new EnemySpawner(scene, new PooledPrefab(new GruntEnemyPrefab(), 32), map.getWaypoints(), 1.6);
 
         scene.getEventBus().subscribe(DeathEvent.class,
                 event -> GameState.getInstance().addGold(event.reward()));

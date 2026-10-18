@@ -7,9 +7,9 @@
 ### GameScene
 | Member | Mô tả |
 |---|---|
-| `GameScene()` | Tạo map, `EnemySpawner` (Grunt qua `PooledPrefab`, 1.5s), subscribe `DeathEvent` → cộng vàng, tạo Goal. |
+| `GameScene()` | Tạo map, `EnemySpawner` (Grunt qua `PooledPrefab`, 1.6s), subscribe `DeathEvent` → cộng vàng, tạo Goal. |
 | `void update(double dt)` | `CollisionSystem.update` → `Scene.update` → `EnemySpawner.update`. |
-| `void handleClick(double x, double y)` | Đặt `ExplosiveTowerPrefab` vào khối xây còn trống. |
+| `boolean tryPlaceTower(double x, double y, TowerType type)` | Đặt tháp (qua `TowerFactory`) vào khối xây còn trống nếu đủ vàng; `false` nếu không đặt được. |
 | `Scene getScene()`, `GameMap getMap()` | |
 
 ### EnemySpawner

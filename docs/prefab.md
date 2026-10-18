@@ -12,7 +12,7 @@ Behaviour chung: `DiscRenderer(ENEMY)`, `Health`, `HealthBarRenderer`, `CircleCo
 
 | Class | HP | Speed | Goal damage | Reward | Size |
 |---|---|---|---|---|---|
-| `GruntEnemyPrefab` | 500 | 50 | 1 | 10 | 24 |
+| `GruntEnemyPrefab` | 60 | 55 | 1 | 10 | 24 |
 | `ScoutEnemyPrefab` | 40 | 160 | 1 | 8 | 18 |
 | `TankEnemyPrefab` | 400 | 45 | 5 | 30 | 30 |
 
@@ -34,7 +34,7 @@ Sau `instantiate`, cần `getBehaviour(PathFollower.class).setWaypoints(...)` (d
 | Class | FireStrategy |
 |---|---|
 | `BasicTowerPrefab` | `SingleShotStrategy(ProjectilePools.BASIC)` |
-| `SpreadTowerPrefab` | `SpreadShotDecorator` (`BASIC` + `BASIC_WEAK`, 1 viên mỗi bên, 15°) |
+| `SpreadTowerPrefab` | `SpreadShotDecorator` (`SPREAD_MAIN` + `SPREAD_SIDE`, 1 viên mỗi bên, 12°) |
 | `SlowTowerPrefab` | `SingleShotStrategy(ProjectilePools.SLOW)` |
 | `ExplosiveTowerPrefab` | `SingleShotStrategy(ProjectilePools.EXPLOSIVE)` |
 
@@ -54,15 +54,16 @@ Sau `instantiate`, cần `getBehaviour(PathFollower.class).setWaypoints(...)` (d
 | Class | Speed | HitEffect |
 |---|---|---|
 | `BasicProjectilePrefab(double damage = 10)` | 500 | `DamageOnHit` |
-| `SlowProjectilePrefab` | 450 | `SlowOnHit(DamageOnHit(6), 0.5, 2.0)` |
-| `ExplosiveProjectilePrefab` | 380 | `ExplodeOnHit(DamageOnHit(15), 128, 8, pooled ExplosionPrefab)` |
+| `SlowProjectilePrefab` | 550 | `SlowOnHit(DamageOnHit(10), 0.55, 2.5)` |
+| `ExplosiveProjectilePrefab` | 480 | `ExplodeOnHit(DamageOnHit(28), 96, 14, pooled ExplosionPrefab)` |
 
 ### ProjectilePools
 `final class ProjectilePools` — các `PooledPrefab` đạn dùng chung (tạo sẵn 16 object mỗi pool). Mọi tháp cùng loại dùng chung một pool.
 
 | Hằng | Nguồn |
 |---|---|
-| `BASIC` | `BasicProjectilePrefab(10)` |
-| `BASIC_WEAK` | `BasicProjectilePrefab(3)` (đạn phụ của Spread) |
+| `BASIC` | `BasicProjectilePrefab(20)` (tháp Basic) |
+| `SPREAD_MAIN` | `BasicProjectilePrefab(14)` (đạn chính của Spread) |
+| `SPREAD_SIDE` | `BasicProjectilePrefab(7)` (đạn phụ của Spread) |
 | `SLOW` | `SlowProjectilePrefab` |
 | `EXPLOSIVE` | `ExplosiveProjectilePrefab` |
