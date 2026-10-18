@@ -9,6 +9,16 @@ import javafx.scene.paint.Color;
 
 public class SpreadTowerPrefab extends TowerPrefab {
     @Override
+    protected double fireInterval() {
+        return 0.9;
+    }
+
+    @Override
+    protected double range() {
+        return 160;
+    }
+
+    @Override
     protected Color color() {
         return Color.web("#66bb6a");
     }
@@ -16,8 +26,8 @@ public class SpreadTowerPrefab extends TowerPrefab {
     @Override
     protected FireStrategy createFireStrategy() {
         return new SpreadShotDecorator(
-                new SingleShotStrategy(new BasicProjectilePrefab(10)),
-                new SingleShotStrategy(new BasicProjectilePrefab(3)),
-                1, 15);
+                new SingleShotStrategy(new BasicProjectilePrefab(14)),
+                new SingleShotStrategy(new BasicProjectilePrefab(7)),
+                1, 12);
     }
 }

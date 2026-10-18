@@ -16,8 +16,8 @@ import com.towerdefense.render.RenderLayer;
 import javafx.scene.paint.Color;
 
 public class ScoutEnemyPrefab implements Prefab {
-    private static final double MAX_HEALTH = 40;
-    private static final double SPEED = 160;
+    private static final double MAX_HEALTH = 35;
+    private static final double SPEED = 120;
     private static final double GOAL_DAMAGE = 1;
     private static final int GOLD_REWARD = 8;
     private static final double SIZE = 18;

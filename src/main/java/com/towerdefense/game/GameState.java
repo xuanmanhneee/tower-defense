@@ -1,5 +1,7 @@
 package com.towerdefense.game;
 
+import com.towerdefense.config.GameConfig;
+
 public class GameState {
 
     private static GameState instance;
@@ -8,8 +10,7 @@ public class GameState {
     private int lives;
 
     private GameState() {
-        this.gold = 100;
-        this.lives = 20;
+        reset();
     }
 
     public static GameState getInstance() {
@@ -40,10 +41,15 @@ public class GameState {
     }
 
     public void loseLife(int amount) {
-        lives -= amount;
+        lives = Math.max(0, lives - amount);
     }
 
     public boolean isGameOver() {
         return lives <= 0;
+    }
+
+    public void reset() {
+        gold = GameConfig.STARTING_GOLD;
+        lives = GameConfig.STARTING_LIVES;
     }
 }

@@ -32,6 +32,10 @@ public class CircleCollider extends Behaviour {
         return radius;
     }
 
+    public CollisionLayer getLayer() {
+        return layer;
+    }
+
     public Vector2 getCenter() {
         return gameObject.getTransform().getPosition();
     }

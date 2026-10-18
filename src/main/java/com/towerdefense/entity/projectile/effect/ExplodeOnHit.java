@@ -1,6 +1,8 @@
 package com.towerdefense.entity.projectile.effect;
 
 import com.towerdefense.behaviour.Health;
+import com.towerdefense.collision.CircleCollider;
+import com.towerdefense.collision.CollisionLayer;
 import com.towerdefense.core.GameObject;
 import com.towerdefense.core.Vector2;
 import com.towerdefense.core.World;
@@ -23,6 +25,11 @@ public class ExplodeOnHit extends HitEffectDecorator {
         for (GameObject e : world.findObjectsWithBehaviour(Health.class)) {
             if (e == target)
                 continue;
+
+            CircleCollider collider = e.getBehaviour(CircleCollider.class);
+            if (collider == null || collider.getLayer() != CollisionLayer.ENEMY)
+                continue;
+
             if (e.getTransform().getPosition().subtract(center).lengthSquared() <= r2) {
                 e.getBehaviour(Health.class).damage(damage);
             }

@@ -15,13 +15,13 @@ public class ExplosiveProjectilePrefab extends ProjectilePrefab {
 
     @Override
     protected double speed() {
-        return 380; // chậm hơn đạn thường cho cân bằng
+        return 480;
     }
 
     @Override
     protected HitEffect hitEffect() {
         // 1. DamageOnHit gây sát thương trực tiếp lên mục tiêu
         // 2. ExplodeOnHit gây sát thương lan lên địch xung quanh + spawn vòng nổ
-        return new ExplodeOnHit(new DamageOnHit(15), 128, 8);
+        return new ExplodeOnHit(new DamageOnHit(28), 96, 14);
     }
 }

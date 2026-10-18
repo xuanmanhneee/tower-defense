@@ -13,6 +13,7 @@ public final class TowerVisuals {
             case BASIC -> Color.DODGERBLUE;
             case SPREAD -> Color.MEDIUMPURPLE;
             case SLOW -> Color.LIGHTSEAGREEN;
+            case EXPLOSIVE -> Color.FIREBRICK;
         };
     }
 }
