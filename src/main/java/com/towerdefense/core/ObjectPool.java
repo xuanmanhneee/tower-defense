@@ -46,7 +46,16 @@ public class ObjectPool {
         }
     }
 
+    /**
+     * Lấy object từ pool. Khi {@link PoolSettings} đang tắt, tạo object mới không gắn với pool
+     * (không được đếm và không tự trả về).
+     */
     public GameObject obtain(Vector2 position) {
+        if (!PoolSettings.isEnabled()) {
+            GameObject unpooled = factory.get();
+            unpooled.getTransform().setPosition(position);
+            return unpooled;
+        }
         GameObject obj = free.poll();
         if (obj != null) {
             freeSet.remove(obj);
@@ -69,8 +78,8 @@ public class ObjectPool {
         if (freeSet.contains(obj)) {
             return; // đã nằm trong pool, bỏ qua lần trả thứ hai
         }
-        if (free.size() >= maxSize) {
-            discarded++;
+        if (!PoolSettings.isEnabled() || free.size() >= maxSize) {
+            discarded++; // pool đang tắt hoặc đã đầy: không giữ lại
             return;
         }
         free.push(obj);

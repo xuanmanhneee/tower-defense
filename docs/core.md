@@ -106,6 +106,16 @@ Object tạo bởi pool tự trả về pool khi `onDestroy` (Behaviour nội b�
 
 Giữ một instance dùng chung; tạo mới mỗi lần thì pool vô tác dụng.
 
+## PoolSettings
+`final class PoolSettings` — cờ bật/tắt pool lúc chạy, áp dụng cho mọi `ObjectPool`.
+
+| Member | Mô tả |
+|---|---|
+| `static boolean isEnabled()` | Mặc định `true`. |
+| `static void setEnabled(boolean)` | Có hiệu lực từ lần `obtain`/`release` kế tiếp. |
+
+Khi tắt: `obtain` luôn tạo object mới (không gắn với pool, không được đếm); object của pool bị huỷ thì bị bỏ thay vì giữ lại. Bật lại thì pool dùng tiếp các object còn rảnh.
+
 ## Quy ước tái sử dụng
 ```
 obtain → reset(pos) → Scene: setScene, start() → update… → destroy() → onDestroy → về pool
