@@ -1,5 +1,8 @@
 package com.towerdefense.ui;
 
+import com.towerdefense.config.GameConfig;
+import com.towerdefense.entity.tower.TowerType;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -10,16 +13,21 @@ public class TowerSelectionScreen implements UIScreen {
 
     private final List<TowerOption> towers;
     private final Consumer<TowerOption> onSelected;
+    private TowerType selectedTower;
 
-    private final double panelWidth = 250;
-    private final double panelHeight = 180;
+    private final double panelWidth = 260;
+    private final double panelHeight = 230;
 
     public TowerSelectionScreen(
             List<TowerOption> towers,
             Consumer<TowerOption> onSelected
     ) {
+        if (towers.isEmpty()) {
+            throw new IllegalArgumentException("At least one tower option is required");
+        }
         this.towers = towers;
         this.onSelected = onSelected;
+        this.selectedTower = towers.get(0).type();
     }
 
     @Override
@@ -29,7 +37,7 @@ public class TowerSelectionScreen implements UIScreen {
     @Override
     public void render(GraphicsContext graphics) {
 
-        double panelX = 800 - panelWidth - 20;
+        double panelX = GameConfig.WINDOW_WIDTH - panelWidth - 20;
         double panelY = 200;
 
         // Panel
@@ -54,7 +62,10 @@ public class TowerSelectionScreen implements UIScreen {
 
         for (TowerOption tower : towers) {
 
-            graphics.setFill(Color.rgb(60, 60, 60));
+            boolean selected = tower.type() == selectedTower;
+            graphics.setFill(selected
+                    ? Color.rgb(40, 115, 180)
+                    : Color.rgb(60, 60, 60));
             graphics.fillRoundRect(
                     panelX + 15,
                     y,
@@ -82,10 +93,15 @@ public class TowerSelectionScreen implements UIScreen {
     }
 
     @Override
-    public void handleClick(double x, double y) {
+    public boolean handleClick(double x, double y) {
 
-        double panelX = 800 - panelWidth - 20;
+        double panelX = GameConfig.WINDOW_WIDTH - panelWidth - 20;
         double panelY = 200;
+
+        if (x < panelX || x > panelX + panelWidth
+                || y < panelY || y > panelY + panelHeight) {
+            return false;
+        }
 
         double optionY = panelY + 50;
 
@@ -96,11 +112,18 @@ public class TowerSelectionScreen implements UIScreen {
                     && y >= optionY
                     && y <= optionY + 35) {
 
+                selectedTower = tower.type();
                 onSelected.accept(tower);
-                return;
+                return true;
             }
 
             optionY += 40;
         }
+
+        return true;
+    }
+
+    public TowerType getSelectedTower() {
+        return selectedTower;
     }
 }

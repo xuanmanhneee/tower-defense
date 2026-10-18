@@ -8,6 +8,16 @@ import javafx.scene.paint.Color;
 
 public class SlowTowerPrefab extends TowerPrefab {
     @Override
+    protected double fireInterval() {
+        return 0.85;
+    }
+
+    @Override
+    protected double range() {
+        return 180;
+    }
+
+    @Override
     protected Color color() {
         return Color.web("#1ebff5");
     }

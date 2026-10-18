@@ -8,5 +8,5 @@ public interface UIScreen {
 
     void render(GraphicsContext graphics);
 
-    void handleClick(double x, double y);
+    boolean handleClick(double x, double y);
 }

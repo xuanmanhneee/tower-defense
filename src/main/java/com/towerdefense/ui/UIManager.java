@@ -1,5 +1,6 @@
 package com.towerdefense.ui;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -7,34 +8,42 @@ import javafx.scene.canvas.GraphicsContext;
 
 public class UIManager {
 
-    private UIScreen currentScreen;
+    private final List<UIScreen> screens = new ArrayList<>();
 
     public void setScreen(UIScreen screen) {
-        currentScreen = screen;
+        screens.clear();
+        screens.add(screen);
+    }
+
+    public void addScreen(UIScreen screen) {
+        screens.add(screen);
     }
 
     public void update(double deltaTime) {
-        if (currentScreen != null) {
-            currentScreen.update(deltaTime);
+        for (UIScreen screen : screens) {
+            screen.update(deltaTime);
         }
     }
 
     public void render(GraphicsContext graphics) {
-        if (currentScreen != null) {
-            currentScreen.render(graphics);
+        for (UIScreen screen : screens) {
+            screen.render(graphics);
         }
     }
 
-    public void handleClick(double x, double y) {
-        if (currentScreen != null) {
-            currentScreen.handleClick(x, y);
+    public boolean handleClick(double x, double y) {
+        for (int i = screens.size() - 1; i >= 0; i--) {
+            if (screens.get(i).handleClick(x, y)) {
+                return true;
+            }
         }
+        return false;
     }
 
     public void showTowerSelection(
             List<TowerOption> towers,
             Consumer<TowerOption> onSelected) {
-        setScreen(
+        addScreen(
                 new TowerSelectionScreen(
                         towers,
                         onSelected));

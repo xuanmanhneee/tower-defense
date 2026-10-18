@@ -1,5 +1,7 @@
 package com.towerdefense.behaviour;
 
+import java.util.function.DoubleConsumer;
+
 import com.towerdefense.core.Behaviour;
 
 public class Health extends Behaviour {
@@ -8,6 +10,7 @@ public class Health extends Behaviour {
     private double currentHealth;
 
     private Runnable onDeath;
+    private DoubleConsumer onDamaged;
 
     public Health(double maxHealth) {
         if (maxHealth <= 0) {
@@ -43,10 +46,17 @@ public class Health extends Behaviour {
         this.onDeath = onDeath;
     }
 
+    public void setOnDamaged(DoubleConsumer onDamaged) {
+        this.onDamaged = onDamaged;
+    }
+
     public void damage(double amount) {
         if (amount <= 0 || isDead()) return;
 
-        currentHealth = Math.max(0, currentHealth - amount);
+        double appliedDamage = Math.min(currentHealth, amount);
+        currentHealth -= appliedDamage;
+
+        if (onDamaged != null) onDamaged.accept(appliedDamage);
 
         if (currentHealth == 0) {
             gameObject.destroy();

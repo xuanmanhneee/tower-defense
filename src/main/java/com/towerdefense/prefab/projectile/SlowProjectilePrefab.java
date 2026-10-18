@@ -8,8 +8,8 @@ import javafx.scene.paint.Color;
 
 public class SlowProjectilePrefab extends ProjectilePrefab {
     @Override protected Color color() { return Color.web("#4dd0e1"); }
-    @Override protected double speed() { return 450; }
+    @Override protected double speed() { return 550; }
     @Override protected HitEffect hitEffect() {
-        return new SlowOnHit(new DamageOnHit(6), 0.5, 2.0);   // còn 50% tốc độ trong 2s
+        return new SlowOnHit(new DamageOnHit(10), 0.55, 2.5);
     }
 }

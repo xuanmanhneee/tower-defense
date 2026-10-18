@@ -8,6 +8,16 @@ import javafx.scene.paint.Color;
 
 public class ExplosiveTowerPrefab extends TowerPrefab {
     @Override
+    protected double fireInterval() {
+        return 1.1;
+    }
+
+    @Override
+    protected double range() {
+        return 165;
+    }
+
+    @Override
     protected Color color() {
         return Color.web("#9d1607");
     }

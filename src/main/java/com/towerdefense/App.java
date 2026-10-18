@@ -1,11 +1,17 @@
 package com.towerdefense;
 
 import com.towerdefense.config.GameConfig;
+import com.towerdefense.entity.tower.TowerType;
+import com.towerdefense.game.GameState;
 import com.towerdefense.render.GameRenderer;
 import com.towerdefense.render.MapRenderer;
 import com.towerdefense.scene.GameScene;
 import com.towerdefense.ui.GameHudScreen;
+import com.towerdefense.ui.TowerOption;
+import com.towerdefense.ui.TowerSelectionScreen;
 import com.towerdefense.ui.UIManager;
+
+import java.util.Arrays;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -33,18 +39,31 @@ public class App extends Application {
         GraphicsContext uiGraphics = uiCanvas.getGraphicsContext2D();
 
         GameScene gameScene = new GameScene();
+        UIManager uiManager = new UIManager();
+
+        TowerSelectionScreen towerSelection = new TowerSelectionScreen(
+                Arrays.stream(TowerType.values())
+                        .map(TowerOption::new)
+                        .toList(),
+                ignored -> {
+                });
+
+        uiManager.addScreen(towerSelection);
+        uiManager.addScreen(new GameHudScreen(
+                GameState.getInstance(),
+                towerSelection::getSelectedTower));
 
         gameCanvas.setOnMouseClicked(event -> {
-            gameScene.handleClick(event.getX(), event.getY());
+            if (!uiManager.handleClick(event.getX(), event.getY())) {
+                gameScene.tryPlaceTower(
+                        event.getX(),
+                        event.getY(),
+                        towerSelection.getSelectedTower());
+            }
         });
 
         MapRenderer mapRenderer = new MapRenderer();
         GameRenderer gameRenderer = new GameRenderer(gameGraphics);
-
-        UIManager uiManager = new UIManager();
-
-        uiManager.setScreen(
-                new GameHudScreen());
 
         Pane root = new Pane(
                 gameCanvas,

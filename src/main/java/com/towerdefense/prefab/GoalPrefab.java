@@ -1,6 +1,5 @@
 package com.towerdefense.prefab;
 
-import com.towerdefense.behaviour.GoalReceiver;
 import com.towerdefense.behaviour.Health;
 import com.towerdefense.collision.CircleCollider;
 import com.towerdefense.collision.CollisionLayer;
@@ -22,8 +21,7 @@ public class GoalPrefab implements Prefab {
         GameObject goal = new GameObject();
 
         goal.addBehaviour(new DiscRenderer(RenderLayer.TOWER, Color.web("#ab47bc"), RADIUS));
-        goal.addBehaviour(new CircleCollider(RADIUS, CollisionLayer.GOAL).detects(CollisionLayer.ENEMY));
-        goal.addBehaviour(new GoalReceiver());
+        goal.addBehaviour(new CircleCollider(RADIUS, CollisionLayer.GOAL));
         goal.addBehaviour(new Health(MAX_HEALTH));
         goal.addBehaviour(new HealthBarRenderer(40, 5, 24));
 

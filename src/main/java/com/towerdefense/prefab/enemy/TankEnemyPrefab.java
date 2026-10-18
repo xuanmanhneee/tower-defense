@@ -16,9 +16,9 @@ import com.towerdefense.render.RenderLayer;
 import javafx.scene.paint.Color;
 
 public class TankEnemyPrefab implements Prefab {
-    private static final double MAX_HEALTH = 400;
-    private static final double SPEED = 45;
-    private static final double GOAL_DAMAGE = 5;
+    private static final double MAX_HEALTH = 180;
+    private static final double SPEED = 38;
+    private static final double GOAL_DAMAGE = 4;
     private static final int GOLD_REWARD = 30;
     private static final double SIZE = 30;
 
