@@ -3,7 +3,7 @@ package com.towerdefense.prefab.tower;
 import com.towerdefense.entity.tower.fire.FireStrategy;
 import com.towerdefense.entity.tower.fire.SingleShotStrategy;
 import com.towerdefense.entity.tower.fire.SpreadShotDecorator;
-import com.towerdefense.prefab.projectile.BasicProjectilePrefab;
+import com.towerdefense.prefab.projectile.ProjectilePools;
 
 import javafx.scene.paint.Color;
 
@@ -26,8 +26,8 @@ public class SpreadTowerPrefab extends TowerPrefab {
     @Override
     protected FireStrategy createFireStrategy() {
         return new SpreadShotDecorator(
-                new SingleShotStrategy(new BasicProjectilePrefab(14)),
-                new SingleShotStrategy(new BasicProjectilePrefab(7)),
+                new SingleShotStrategy(ProjectilePools.SPREAD_MAIN),
+                new SingleShotStrategy(ProjectilePools.SPREAD_SIDE),
                 1, 12);
     }
 }

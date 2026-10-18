@@ -74,6 +74,10 @@ public class GameObject {
 
     public void reset(Vector2 position) {
         this.alive = true;
-        this.getTransform().setPosition(position);
+        this.transform.setPosition(position);
+        this.transform.setRotation(0);
+        for (int i = 0; i < behaviours.size(); i++) {
+            behaviours.get(i).onReset();
+        }
     }
 }

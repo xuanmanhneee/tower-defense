@@ -24,6 +24,12 @@ public class PathFollower extends Behaviour {
         speedModifiers = gameObject.getBehaviour(SpeedModifiers.class);
     }
 
+    /** Quay về đầu đường đi; danh sách waypoint được giữ nguyên. */
+    @Override
+    public void onReset() {
+        currentIndex = 1;
+    }
+
     @Override
     public void update(double deltaTime) {
 

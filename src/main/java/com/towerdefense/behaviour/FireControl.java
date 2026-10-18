@@ -19,6 +19,11 @@ public class FireControl extends Behaviour {
     }
 
     @Override
+    public void onReset() {
+        cooldown = 0;
+    }
+
+    @Override
     public void update(double dt) {
         cooldown -= dt;
         if (cooldown > 0)
