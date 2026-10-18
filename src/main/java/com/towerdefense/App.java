@@ -20,6 +20,7 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -54,7 +55,8 @@ public class App extends Application {
         uiManager.addScreen(towerSelection);
         uiManager.addScreen(new GameHudScreen(
                 GameState.getInstance(),
-                towerSelection::getSelectedTower));
+                towerSelection::getSelectedTower,
+                gameScene::isPaused));
 
         DebugPanelScreen debugPanel = new DebugPanelScreen(DebugMetrics.getInstance());
         uiManager.addScreen(debugPanel);
@@ -77,7 +79,12 @@ public class App extends Application {
                 uiCanvas);
 
         javafx.scene.Scene fxScene = new javafx.scene.Scene(root, WIDTH, HEIGHT);
-        fxScene.setOnKeyPressed(event -> debugPanel.handleKeyPressed(event.getCode()));
+        fxScene.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ESCAPE) {
+                gameScene.togglePause();
+            }
+            debugPanel.handleKeyPressed(event.getCode());
+        });
 
         stage.setTitle("Tower Defense");
         stage.setResizable(false);

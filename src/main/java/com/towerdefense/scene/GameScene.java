@@ -29,7 +29,7 @@ public class GameScene {
     private final Map<BlockPosition, PlacedTower> placedTowers = new HashMap<>();
 
     private GameObject goal;
-    private boolean gameOver;
+    private GamePhase phase = new PlayingState();
 
     public GameScene() {
         GameState.getInstance().reset();
@@ -40,7 +40,7 @@ public class GameScene {
         scene.getEventBus().subscribe(DeathEvent.class,
                 event -> GameState.getInstance().addGold(event.reward()));
         scene.getEventBus().subscribe(GameOverEvent.class,
-                event -> gameOver = true);
+                event -> phase = new GameOverState());
 
         spawnGoal();
     }
@@ -56,13 +56,13 @@ public class GameScene {
     }
 
     public void update(double deltaTime) {
-        if (gameOver) {
-            return;
-        }
+        phase.update(this, deltaTime);
+    }
 
+    void updateGameplay(double deltaTime) {
         collisionSystem.update(scene.getGameObjects());
 
-        if (gameOver) {
+        if (phase.isGameOver()) {
             return;
         }
 
@@ -71,7 +71,7 @@ public class GameScene {
     }
 
     public boolean tryPlaceTower(double x, double y, TowerType towerType) {
-        if (gameOver || towerType == null) {
+        if (!phase.canPlaceTower() || towerType == null) {
             return false;
         }
 
@@ -152,6 +152,14 @@ public class GameScene {
     }
 
     public boolean isGameOver() {
-        return gameOver;
+        return phase.isGameOver();
+    }
+
+    public void togglePause() {
+        phase = phase.togglePause();
+    }
+
+    public boolean isPaused() {
+        return phase.isPaused();
     }
 }

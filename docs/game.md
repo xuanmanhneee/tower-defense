@@ -1,15 +1,17 @@
 # game, scene, event, config, App
 
 ## App
-`class App extends Application` — tạo hai `Canvas` (game + UI), `AnimationTimer` làm game loop (`deltaTime` giới hạn 0.05s): `GameScene.update` → `MapRenderer` → `GameRenderer` → `UIManager`. Click canvas → `GameScene.handleClick`.
+`class App extends Application` — tạo hai `Canvas` (game + UI), `AnimationTimer` làm game loop (`deltaTime` giới hạn 0.05s): `GameScene.update` → `MapRenderer` → `GameRenderer` → `UIManager`. App chuyển Esc tới `GameScene` để pause/resume và vẫn forward F3 tới debug panel.
 
 ## scene
 ### GameScene
+`GameScene` giữ phase hiện tại (`PlayingState`, `PausedState`, hoặc `GameOverState`) và điều phối gameplay theo phase. Esc chuyển playing ↔ paused; game over là terminal. Chi tiết về vai trò State Pattern và các phase nằm trong [design-patterns.md](design-patterns.md).
+
 | Member | Mô tả |
 |---|---|
 | `GameScene()` | Tạo map, `EnemySpawner` (Grunt qua `PooledPrefab`, 1.6s), subscribe `DeathEvent` → cộng vàng, tạo Goal. |
-| `void update(double dt)` | `CollisionSystem.update` → `Scene.update` → `EnemySpawner.update`. |
-| `boolean tryPlaceTower(double x, double y, TowerType type)` | Đặt tháp (qua `TowerFactory`) vào khối xây còn trống nếu đủ vàng; `false` nếu không đặt được. |
+| `void update(double dt)` | Trong `PlayingState`: `CollisionSystem.update` → game-over guard → `Scene.update` → `EnemySpawner.update`; pause và game over không chạy gameplay simulation. |
+| `boolean tryPlaceTower(double x, double y, TowerType type)` | Đặt tháp (qua `TowerFactory`) vào khối xây còn trống nếu đủ vàng và phase cho phép; `false` khi pause, game over, hoặc không đặt được. |
 | `Scene getScene()`, `GameMap getMap()` | |
 
 ### EnemySpawner
