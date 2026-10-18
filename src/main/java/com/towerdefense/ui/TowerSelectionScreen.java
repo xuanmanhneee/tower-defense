@@ -30,6 +30,14 @@ public class TowerSelectionScreen implements UIScreen {
         this.selectedTower = towers.get(0).type();
     }
 
+    private double getPanelX() {
+        return GameConfig.WINDOW_WIDTH - panelWidth - 20;
+    }
+
+    private double getPanelY() {
+        return GameConfig.WINDOW_HEIGHT - panelHeight - 20;
+    }
+
     @Override
     public void update(double deltaTime) {
     }
@@ -37,8 +45,8 @@ public class TowerSelectionScreen implements UIScreen {
     @Override
     public void render(GraphicsContext graphics) {
 
-        double panelX = GameConfig.WINDOW_WIDTH - panelWidth - 20;
-        double panelY = 200;
+        double panelX = getPanelX();
+        double panelY = getPanelY();
 
         // Panel
         graphics.setFill(Color.rgb(30, 30, 30, 0.95));
@@ -95,8 +103,8 @@ public class TowerSelectionScreen implements UIScreen {
     @Override
     public boolean handleClick(double x, double y) {
 
-        double panelX = GameConfig.WINDOW_WIDTH - panelWidth - 20;
-        double panelY = 200;
+        double panelX = getPanelX();
+        double panelY = getPanelY();
 
         if (x < panelX || x > panelX + panelWidth
                 || y < panelY || y > panelY + panelHeight) {

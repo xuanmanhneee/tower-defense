@@ -44,7 +44,9 @@ Chỉ `PlayingState` cho phép đặt hoặc nâng cấp tháp. `GameScene.tryPl
 
 ### Input và UI
 
-`App` chuyển phím Esc tới `GameScene.togglePause()` và vẫn gửi các phím nhấn tới debug panel, bao gồm F3. `GameHudScreen` theo dõi `GameScene.isPaused()` qua `BooleanSupplier` và vẽ pause overlay trên HUD hiện có. Overlay pause được vẽ trước game-over overlay; `GameOverState.isPaused()` trả về `false`, nên game over không bị coi là pause.
+`App` gửi Esc tới `GameFlowController.handleEscape()` và vẫn chuyển phím tới debug panel, bao gồm F3 trong session. `PauseMenuScreen` và `GameOverScreen` sở hữu các modal UI và chặn click xuyên xuống gameplay; `GameHudScreen` chỉ vẽ HUD.
+
+`GameFlowController` điều phối view cấp ứng dụng (Main Menu, Playing, Paused, Game Over) và vòng đời `GameScene`. Đây là lớp điều phối luồng màn hình, không mở rộng State Pattern gameplay: Main Menu không nằm trong `GamePhase`. Resume giữ nguyên scene hiện tại; Restart tạo scene mới; Game Over vẫn terminal cho tới khi restart hoặc quay về Main Menu.
 
 ### Phân biệt với `GameState`
 

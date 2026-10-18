@@ -18,6 +18,11 @@ public class ExplosiveTowerPrefab extends TowerPrefab {
     }
 
     @Override
+    protected com.towerdefense.entity.tower.TowerType towerType() {
+        return com.towerdefense.entity.tower.TowerType.EXPLOSIVE;
+    }
+
+    @Override
     protected Color color() {
         return Color.web("#9d1607");
     }

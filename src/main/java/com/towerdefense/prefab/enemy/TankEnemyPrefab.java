@@ -9,9 +9,9 @@ import com.towerdefense.collision.CircleCollider;
 import com.towerdefense.collision.CollisionLayer;
 import com.towerdefense.core.GameObject;
 import com.towerdefense.core.Prefab;
+import com.towerdefense.entity.enemy.EnemyType;
+import com.towerdefense.render.EnemyRenderer;
 import com.towerdefense.render.HealthBarRenderer;
-import com.towerdefense.render.DiscRenderer;
-import com.towerdefense.render.RenderLayer;
 
 import javafx.scene.paint.Color;
 
@@ -26,7 +26,7 @@ public class TankEnemyPrefab implements Prefab {
     public GameObject instantiate() {
         GameObject enemy = new GameObject();
 
-        enemy.addBehaviour(new DiscRenderer(RenderLayer.ENEMY, Color.web("#ef5350"), 12));
+        enemy.addBehaviour(new EnemyRenderer(EnemyType.TANK));
         enemy.addBehaviour(new Health(MAX_HEALTH));
         enemy.addBehaviour(new HealthBarRenderer(40, 5, 24));
         enemy.addBehaviour(new CircleCollider(SIZE / 2, CollisionLayer.ENEMY).detects(CollisionLayer.GOAL));
