@@ -3,7 +3,6 @@ package com.towerdefense.scene;
 import com.towerdefense.collision.CollisionSystem;
 import com.towerdefense.config.GameConfig;
 import com.towerdefense.core.GameObject;
-import com.towerdefense.core.PooledPrefab;
 import com.towerdefense.core.Scene;
 import com.towerdefense.core.Vector2;
 import com.towerdefense.behaviour.Health;
@@ -14,8 +13,11 @@ import com.towerdefense.game.GameState;
 import com.towerdefense.map.GameMap;
 import com.towerdefense.map.MapFactory;
 import com.towerdefense.prefab.GoalPrefab;
-import com.towerdefense.prefab.enemy.GruntEnemyPrefab;
 import com.towerdefense.prefab.tower.TowerFactory;
+import com.towerdefense.wave.EnemyRegistry;
+import com.towerdefense.wave.WaveConfig;
+import com.towerdefense.wave.WaveLoader;
+import com.towerdefense.wave.WaveSpawner;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +27,7 @@ public class GameScene {
     private final Scene scene = new Scene();
     private final GameMap map;
     private final CollisionSystem collisionSystem = new CollisionSystem();
-    private final EnemySpawner enemySpawner;
+    private final WaveSpawner waveSpawner;
     private final Map<BlockPosition, PlacedTower> placedTowers = new HashMap<>();
 
     private GameObject goal;
@@ -35,7 +37,12 @@ public class GameScene {
         GameState.getInstance().reset();
         map = MapFactory.createLevel1Map();
 
-        enemySpawner = new EnemySpawner(scene, new PooledPrefab(new GruntEnemyPrefab(), 32), map.getWaypoints(), 1.6);
+        WaveConfig waveConfig = WaveLoader.load("/waves/level-1.json");
+        waveSpawner = new WaveSpawner(
+                scene,
+                map.getWaypoints(),
+                waveConfig.waves(),
+                new EnemyRegistry());
 
         scene.getEventBus().subscribe(DeathEvent.class,
                 event -> GameState.getInstance().addGold(event.reward()));
@@ -67,7 +74,7 @@ public class GameScene {
         }
 
         scene.update(deltaTime);
-        enemySpawner.update(deltaTime);
+        waveSpawner.update(deltaTime);
     }
 
     public boolean tryPlaceTower(double x, double y, TowerType towerType) {
@@ -153,5 +160,9 @@ public class GameScene {
 
     public boolean isGameOver() {
         return gameOver;
+    }
+
+    public WaveSpawner getWaveSpawner() {
+        return waveSpawner;
     }
 }

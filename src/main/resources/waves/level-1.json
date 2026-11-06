@@ -1,0 +1,23 @@
+{
+  "waves": [
+    {
+      "delayAfter": 6.0,
+      "groups": [
+        { "enemy": "grunt", "count": 5, "interval": 1.5 }
+      ]
+    },
+    {
+      "delayAfter": 7.0,
+      "groups": [
+        { "enemy": "grunt", "count": 8, "interval": 1.2 },
+        { "enemy": "scout", "count": 3, "interval": 0.8 }
+      ]
+    },
+    {
+      "delayAfter": 0.0,
+      "groups": [
+        { "enemy": "tank", "count": 2, "interval": 3.0 }
+      ]
+    }
+  ]
+}

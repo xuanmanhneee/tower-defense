@@ -54,7 +54,8 @@ public class App extends Application {
         uiManager.addScreen(towerSelection);
         uiManager.addScreen(new GameHudScreen(
                 GameState.getInstance(),
-                towerSelection::getSelectedTower));
+                towerSelection::getSelectedTower,
+                gameScene.getWaveSpawner()));
 
         DebugPanelScreen debugPanel = new DebugPanelScreen(DebugMetrics.getInstance());
         uiManager.addScreen(debugPanel);
