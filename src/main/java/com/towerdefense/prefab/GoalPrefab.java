@@ -3,6 +3,7 @@ package com.towerdefense.prefab;
 import com.towerdefense.behaviour.Health;
 import com.towerdefense.collision.CircleCollider;
 import com.towerdefense.collision.CollisionLayer;
+import com.towerdefense.config.GameConfig;
 import com.towerdefense.core.GameObject;
 import com.towerdefense.core.Prefab;
 import com.towerdefense.render.DiscRenderer;
@@ -13,7 +14,7 @@ import javafx.scene.paint.Color;
 
 public class GoalPrefab implements Prefab {
 
-    private static final double MAX_HEALTH = 20;
+    private static final double MAX_HEALTH = GameConfig.STARTING_LIVES;
     private static final double RADIUS = 14;
 
     @Override

@@ -78,7 +78,7 @@ public final class MainMenuView extends StackPane {
                 (observable, previous, selected) -> onShowFpsChanged.accept(selected));
 
         Button backButton = menuButton("BACK", false);
-        backButton.setOnAction(event -> showMainMenu());
+        backButton.setOnAction(event -> showMenu());
 
         VBox card = new VBox(20, heading, description, showFps, backButton);
         card.setAlignment(Pos.CENTER_LEFT);
@@ -103,10 +103,12 @@ public final class MainMenuView extends StackPane {
         settingsMenu.setVisible(true);
     }
 
-    private void showMainMenu() {
+    public void showMenu() {
         settingsMenu.setVisible(false);
         settingsMenu.setManaged(false);
         mainMenu.setManaged(true);
         mainMenu.setVisible(true);
+        setManaged(true);
+        setVisible(true);
     }
 }

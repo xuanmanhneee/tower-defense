@@ -1,13 +1,20 @@
 package com.towerdefense;
 
+import com.towerdefense.audio.AudioManager;
+import com.towerdefense.audio.AudioResources;
 import com.towerdefense.config.GameConfig;
 import com.towerdefense.debug.DebugMetrics;
 import com.towerdefense.entity.tower.TowerType;
+import com.towerdefense.event.TowerFiredEvent;
+import com.towerdefense.event.TowerUpgradedEvent;
+import com.towerdefense.event.WavesClearedEvent;
+import com.towerdefense.event.GameOverEvent;
 import com.towerdefense.game.GameState;
 import com.towerdefense.render.GameRenderer;
 import com.towerdefense.render.MapRenderer;
 import com.towerdefense.scene.GameScene;
 import com.towerdefense.ui.GameHudScreen;
+import com.towerdefense.ui.GameResultView;
 import com.towerdefense.ui.DebugPanelScreen;
 import com.towerdefense.ui.FpsOverlayScreen;
 import com.towerdefense.ui.MainMenuView;
@@ -38,8 +45,12 @@ public class App extends Application {
     private long lastTime = 0;
     private boolean playing;
     private GameScene gameScene;
+    private UIManager uiManager;
+    private TowerSelectionScreen towerSelection;
     private Button pauseButton;
     private PauseMenuView pauseMenu;
+    private MainMenuView mainMenu;
+    private GameResultView gameResult;
 
     @Override
     public void start(Stage stage) {
@@ -52,27 +63,9 @@ public class App extends Application {
         GraphicsContext gameGraphics = gameCanvas.getGraphicsContext2D();
         GraphicsContext uiGraphics = uiCanvas.getGraphicsContext2D();
 
-        gameScene = new GameScene();
-        UIManager uiManager = new UIManager();
-
-        TowerSelectionScreen towerSelection = new TowerSelectionScreen(
-                Arrays.stream(TowerType.values())
-                        .map(TowerOption::new)
-                        .toList(),
-                ignored -> {
-                });
-
-        uiManager.addScreen(towerSelection);
-        uiManager.addScreen(new GameHudScreen(
-                GameState.getInstance(),
-                towerSelection::getSelectedTower,
-                gameScene.getWaveSpawner()));
-
         DebugPanelScreen debugPanel = new DebugPanelScreen(DebugMetrics.getInstance());
-        uiManager.addScreen(debugPanel);
-
         FpsOverlayScreen fpsOverlay = new FpsOverlayScreen();
-        uiManager.addScreen(fpsOverlay);
+        resetGame(debugPanel, fpsOverlay);
 
         gameCanvas.setOnMouseClicked(event -> {
             if (!playing || gameScene.isPaused()) {
@@ -103,17 +96,32 @@ public class App extends Application {
                 () -> setPaused(false),
                 Platform::exit);
 
-        MainMenuView mainMenu = new MainMenuView(
+        mainMenu = new MainMenuView(
                 this::startGame,
                 fpsOverlay::setVisible,
                 Platform::exit);
+
+        gameResult = new GameResultView(
+                () -> {
+                    resetGame(debugPanel, fpsOverlay);
+                    gameResult.hideResult();
+                    startGame();
+                },
+                () -> {
+                    playing = false;
+                    resetGame(debugPanel, fpsOverlay);
+                    gameResult.hideResult();
+                    mainMenu.showMenu();
+                    AudioManager.getInstance().playMusic("/audios/menu.mp3");
+                });
 
         StackPane root = new StackPane(
                 gameCanvas,
                 uiCanvas,
                 pauseButton,
                 mainMenu,
-                pauseMenu);
+                pauseMenu,
+                gameResult);
 
         javafx.scene.Scene fxScene = new javafx.scene.Scene(root, WIDTH, HEIGHT);
         fxScene.getStylesheets().add(
@@ -130,6 +138,7 @@ public class App extends Application {
         stage.setResizable(false);
         stage.setScene(fxScene);
         stage.show();
+        AudioManager.getInstance().playMusic("/audios/menu.mp3");
 
         AnimationTimer gameLoop = new AnimationTimer() {
 
@@ -174,8 +183,66 @@ public class App extends Application {
     private void startGame() {
         playing = true;
         setPaused(false);
+        AudioManager.getInstance().playPlaylist(
+                "/audios/bgm_1.mp3",
+                "/audios/bgm_2.mp3");
         pauseButton.setManaged(true);
         pauseButton.setVisible(true);
+    }
+
+    @Override
+    public void stop() {
+        AudioManager.getInstance().stopAll();
+    }
+
+    private void resetGame(DebugPanelScreen debugPanel, FpsOverlayScreen fpsOverlay) {
+        gameScene = new GameScene();
+        connectAudio(gameScene);
+        uiManager = new UIManager();
+        towerSelection = new TowerSelectionScreen(
+                Arrays.stream(TowerType.values())
+                        .map(TowerOption::new)
+                        .toList(),
+                ignored -> {
+                });
+        uiManager.addScreen(towerSelection);
+        uiManager.addScreen(new GameHudScreen(
+                GameState.getInstance(),
+                towerSelection::getSelectedTower,
+                gameScene.getWaveSpawner()));
+        uiManager.addScreen(debugPanel);
+        uiManager.addScreen(fpsOverlay);
+    }
+
+    private void connectAudio(GameScene gameScene) {
+        AudioManager audio = AudioManager.getInstance();
+        gameScene.getScene().getEventBus().subscribe(
+                TowerFiredEvent.class,
+                event -> audio.playEffect(switch (event.towerType()) {
+                    case BASIC -> "/audios/shoot.mp3";
+                    case SPREAD -> "/audios/spread.mp3";
+                    case SLOW -> "/audios/slow.mp3";
+                    case EXPLOSIVE -> "/audios/explode.mp3";
+                }));
+        gameScene.getScene().getEventBus().subscribe(
+                TowerUpgradedEvent.class,
+                event -> audio.playEffect("/audios/upgrate_tower.mp3"));
+        gameScene.getScene().getEventBus().subscribe(
+                WavesClearedEvent.class,
+                event -> showGameResult(true));
+        gameScene.getScene().getEventBus().subscribe(
+                GameOverEvent.class,
+                event -> showGameResult(false));
+    }
+
+    private void showGameResult(boolean won) {
+        playing = false;
+        pauseButton.setVisible(false);
+        pauseButton.setManaged(false);
+        AudioManager.getInstance().stopMusic();
+        AudioManager.getInstance().playEffect(
+                AudioResources.fromName(won ? "win" : "lose"));
+        gameResult.showResult(won);
     }
 
     private void setPaused(boolean paused) {

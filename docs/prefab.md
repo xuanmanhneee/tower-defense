@@ -5,18 +5,18 @@ Package `com.towerdefense.prefab`. Mỗi prefab implements `Prefab` và trả v�
 ## Goal
 | Class | Mô tả |
 |---|---|
-| `GoalPrefab` | Đích. `Health(20)`, collider `GOAL` detects `ENEMY`, `GoalReceiver`, `DiscRenderer`, `HealthBarRenderer`. |
+| `GoalPrefab` | Đích. Máu bằng `STARTING_LIVES` (10), collider `GOAL` detects `ENEMY`, `DiscRenderer`, `HealthBarRenderer`. |
 
 ## enemy
-Behaviour chung: `DiscRenderer(ENEMY)`, `Health`, `HealthBarRenderer`, `CircleCollider(ENEMY).detects(GOAL)`, `ContactDamage(goalDamage, true)`, `PathFollower`, `RewardOnDeath`, `SpeedModifiers`.
+Behaviour chung: `EnemyRenderer`, `Health`, `HealthBarRenderer`, `CircleCollider(ENEMY).detects(GOAL)`, `ContactDamage(goalDamage, true)`, `PathFollower`, `RewardOnDeath`, `SpeedModifiers`.
 
 | Class | HP | Speed | Goal damage | Reward | Size |
 |---|---|---|---|---|---|
-| `GruntEnemyPrefab` | 60 | 55 | 1 | 10 | 24 |
-| `ScoutEnemyPrefab` | 40 | 160 | 1 | 8 | 18 |
-| `TankEnemyPrefab` | 400 | 45 | 5 | 30 | 30 |
+| `GruntEnemyPrefab` | 60 | 55 | 3 | 14 | 24 |
+| `ScoutEnemyPrefab` | 35 | 90 | 2 | 18 | 18 |
+| `TankEnemyPrefab` | 420 | 38 | 5 | 30 | 30 |
 
-Sau `instantiate`, cần `getBehaviour(PathFollower.class).setWaypoints(...)` (do `EnemySpawner` làm).
+Sau `instantiate`, cần `getBehaviour(PathFollower.class).setWaypoints(...)` (do `WaveSpawner` làm).
 
 ## tower — Template Method
 `abstract class TowerPrefab implements Prefab`
@@ -29,12 +29,12 @@ Sau `instantiate`, cần `getBehaviour(PathFollower.class).setWaypoints(...)` (d
 | `Color color()` | `CRIMSON` |
 | `abstract FireStrategy createFireStrategy()` | — |
 
-`instantiate()` (final): `DiscRenderer(TOWER)` + `Targeting(range)` + `FireControl`.
+`instantiate()` (final): `TowerRenderer` + `Targeting(range)` + `FireControl`.
 
 | Class | FireStrategy |
 |---|---|
 | `BasicTowerPrefab` | `SingleShotStrategy(ProjectilePools.BASIC)` |
-| `SpreadTowerPrefab` | `SpreadShotDecorator` (`SPREAD_MAIN` + `SPREAD_SIDE`, 1 viên mỗi bên, 12°) |
+| `SpreadTowerPrefab` | `SpreadShotDecorator` (`SPREAD_MAIN` + `SPREAD_SIDE`, 1 viên mỗi bên, 24°) |
 | `SlowTowerPrefab` | `SingleShotStrategy(ProjectilePools.SLOW)` |
 | `ExplosiveTowerPrefab` | `SingleShotStrategy(ProjectilePools.EXPLOSIVE)` |
 
@@ -44,7 +44,7 @@ Sau `instantiate`, cần `getBehaviour(PathFollower.class).setWaypoints(...)` (d
 | Hook | Mặc định |
 |---|---|
 | `double radius()` | 4 |
-| `double maxRange()` | 180 |
+| `double maxRange()` | 220 |
 | `abstract Color color()` | — |
 | `abstract double speed()` | — |
 | `abstract HitEffect hitEffect()` | — |

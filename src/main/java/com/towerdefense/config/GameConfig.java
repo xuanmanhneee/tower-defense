@@ -14,7 +14,7 @@ public final class GameConfig {
 
     // Gameplay mặc định
     public static final int STARTING_GOLD = 100;
-    public static final int STARTING_LIVES = 20;
+    public static final int STARTING_LIVES = 10;
 
     public static final int TOWER_SIZE_IN_TILES = 2;
 }

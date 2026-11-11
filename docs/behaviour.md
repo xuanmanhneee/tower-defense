@@ -13,7 +13,7 @@ Package `com.towerdefense.behaviour`. Tất cả extends `Behaviour`.
 | `ContactDamage` | `(double amount, boolean destroyOnHit)` | `setAmount(double)`. Implements `CollisionListener`: gây sát thương lên `Health` của đối tượng chạm. |
 | `GoalReceiver` | `()` | Implements `CollisionListener`: huỷ địch chạm vào. |
 | `Targeting` | `(double range)` | `getCurrentTarget()`. Chọn `PathFollower` gần nhất trong tầm mỗi frame. |
-| `FireControl` | `(Targeting, FireStrategy, double interval)` | Bắn theo `interval` khi có mục tiêu. |
+| `FireControl` | `(Targeting, FireStrategy, double interval, TowerType)` | Bắn theo `interval` khi có mục tiêu và phát `TowerFiredEvent`. |
 | `Launchable` | abstract | `launch(Vector2 direction, GameObject target)`. |
 | `LinearMotion` | `(double speed)` | Extends `Launchable`. Bay thẳng theo hướng đã `launch`. |
 | `HomingMotion` | `(double speed)` | `setTarget(GameObject)`. Bay theo mục tiêu; mục tiêu chết thì giữ hướng cuối. |

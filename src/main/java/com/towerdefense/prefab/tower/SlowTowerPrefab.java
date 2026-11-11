@@ -14,7 +14,7 @@ public class SlowTowerPrefab extends TowerPrefab {
 
     @Override
     protected double range() {
-        return 180;
+        return 195;
     }
 
     @Override

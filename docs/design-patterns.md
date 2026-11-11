@@ -66,5 +66,6 @@ Test bao phủ chuyển phase, game over terminal, đóng băng simulation và c
 ## Pattern khác và thành phần liên quan
 
 - **Singleton — `GameState`:** cung cấp trạng thái gold và lives dùng chung. Xem [game.md](game.md).
+- **Singleton — `AudioManager`:** giữ một music player dùng chung và cache sound effect; `App` ánh xạ các event bắn, nâng cấp và hoàn tất wave sang audio tương ứng.
 - **Factory — `MapFactory` và `TowerFactory`:** tập trung việc tạo map và tower. Xem [map.md](map.md) và [game.md](game.md).
 - **Object Pool — `ObjectPool`:** tái sử dụng game object, bao gồm enemy được spawn. Xem [core.md](core.md).

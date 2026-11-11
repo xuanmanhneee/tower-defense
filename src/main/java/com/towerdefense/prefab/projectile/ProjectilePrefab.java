@@ -20,7 +20,7 @@ public abstract class ProjectilePrefab implements Prefab {
     }
 
     protected double maxRange() {
-        return 180; // lớn hơn tầm bắn tháp (150) để đạn kịp trúng địch ở mép tầm
+        return 220; // chừa khoảng đuổi mục tiêu đang rời mép tầm bắn
     }
 
     protected abstract Color color();

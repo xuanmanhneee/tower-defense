@@ -13,13 +13,11 @@ import com.towerdefense.entity.enemy.EnemyType;
 import com.towerdefense.render.EnemyRenderer;
 import com.towerdefense.render.HealthBarRenderer;
 
-import javafx.scene.paint.Color;
-
 public class ScoutEnemyPrefab implements Prefab {
     private static final double MAX_HEALTH = 35;
-    private static final double SPEED = 120;
-    private static final double GOAL_DAMAGE = 1;
-    private static final int GOLD_REWARD = 8;
+    private static final double SPEED = 90;
+    private static final double GOAL_DAMAGE = 2;
+    private static final int GOLD_REWARD = 18;
     private static final double SIZE = 18;
 
     @Override

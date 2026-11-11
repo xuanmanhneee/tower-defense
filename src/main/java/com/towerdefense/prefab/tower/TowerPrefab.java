@@ -40,7 +40,11 @@ public abstract class TowerPrefab implements Prefab {
         GameObject tower = new GameObject();
         tower.addBehaviour(new TowerRenderer(towerType()));
         Targeting targeting = tower.addBehaviour(new Targeting(range()));
-        tower.addBehaviour(new FireControl(targeting, createFireStrategy(), fireInterval()));
+        tower.addBehaviour(new FireControl(
+                targeting,
+                createFireStrategy(),
+                fireInterval(),
+                towerType()));
         return tower;
     }
 }

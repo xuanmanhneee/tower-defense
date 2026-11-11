@@ -8,6 +8,7 @@ import com.towerdefense.core.Vector2;
 import com.towerdefense.behaviour.Health;
 import com.towerdefense.event.DeathEvent;
 import com.towerdefense.event.GameOverEvent;
+import com.towerdefense.event.TowerUpgradedEvent;
 import com.towerdefense.entity.tower.TowerType;
 import com.towerdefense.game.GameState;
 import com.towerdefense.game.GameSessionStats;
@@ -138,6 +139,7 @@ public class GameScene {
                 TowerFactory.create(upgradeType),
                 centerOf(block));
         placedTowers.put(blockPosition, new PlacedTower(upgradeType, upgradedTower));
+        scene.getEventBus().publish(new TowerUpgradedEvent(upgradeType));
         return true;
     }
 

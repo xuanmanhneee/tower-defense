@@ -11,6 +11,7 @@ import com.towerdefense.core.Vector2;
 import com.towerdefense.entity.tower.TowerType;
 import com.towerdefense.event.DeathEvent;
 import com.towerdefense.event.GameOverEvent;
+import com.towerdefense.event.TowerUpgradedEvent;
 import com.towerdefense.game.GameState;
 import org.junit.jupiter.api.Test;
 
@@ -96,13 +97,33 @@ class GameSceneStateTest {
     }
 
     @Test
+    void successfulUpgradePublishesItsTowerType() {
+        GameScene game = new GameScene();
+        TowerType[] upgradedType = {null};
+        game.getScene().getEventBus().subscribe(
+                TowerUpgradedEvent.class,
+                event -> upgradedType[0] = event.towerType());
+
+        assertTrue(game.tryPlaceTower(96, 192, TowerType.BASIC));
+        assertTrue(game.tryPlaceTower(96, 192, TowerType.SPREAD));
+
+        assertEquals(TowerType.SPREAD, upgradedType[0]);
+    }
+
+    @Test
     void goalDeathEntersTerminalGameOverState() {
         GameScene game = new GameScene();
         game.update(0.0);
         GameObject goal = game.getScene()
                 .findObjectsWithBehaviour(Health.class).get(0);
 
-        goal.getBehaviour(Health.class).damage(20);
+        assertEquals(10, GameState.getInstance().getLives());
+        goal.getBehaviour(Health.class).damage(2);
+        goal.getBehaviour(Health.class).damage(3);
+        assertFalse(game.isGameOver());
+        assertEquals(5, GameState.getInstance().getLives());
+
+        goal.getBehaviour(Health.class).damage(5);
         game.togglePause();
 
         assertTrue(game.isGameOver());

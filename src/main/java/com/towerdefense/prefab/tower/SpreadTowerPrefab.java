@@ -15,7 +15,7 @@ public class SpreadTowerPrefab extends TowerPrefab {
 
     @Override
     protected double range() {
-        return 160;
+        return 175;
     }
 
     @Override
@@ -33,6 +33,6 @@ public class SpreadTowerPrefab extends TowerPrefab {
         return new SpreadShotDecorator(
                 new SingleShotStrategy(ProjectilePools.SPREAD_MAIN),
                 new SingleShotStrategy(ProjectilePools.SPREAD_SIDE),
-                1, 12);
+                1, 30);
     }
 }

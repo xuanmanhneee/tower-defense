@@ -25,7 +25,7 @@ class PooledPrefabIntegrationTest {
         for (int i = 0; i < shots; i++) {
             strategy.fire(new Vector2(100, 100), new Vector2(1, 0), null, scene);
             for (int k = 0; k < 10; k++) {
-                scene.update(0.05); // đạn bay quá maxRange (180px) rồi tự huỷ
+                scene.update(0.05); // đạn bay quá maxRange (220px) rồi tự huỷ
             }
         }
 

@@ -14,7 +14,7 @@ public class ExplosiveTowerPrefab extends TowerPrefab {
 
     @Override
     protected double range() {
-        return 165;
+        return 180;
     }
 
     @Override

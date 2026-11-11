@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.towerdefense.core.GameObject;
 import com.towerdefense.core.Scene;
 import com.towerdefense.core.Vector2;
+import com.towerdefense.entity.tower.TowerType;
+import com.towerdefense.event.TowerFiredEvent;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -69,6 +71,8 @@ class BehaviourResetTest {
     void fireControlCooldownIsCleared() {
         Scene scene = new Scene();
         int[] shots = {0};
+        int[] shotEvents = {0};
+        scene.getEventBus().subscribe(TowerFiredEvent.class, event -> shotEvents[0]++);
         GameObject target = new GameObject();
         target.getTransform().setPosition(new Vector2(10, 0));
         target.addBehaviour(new PathFollower(1));
@@ -76,7 +80,11 @@ class BehaviourResetTest {
 
         GameObject tower = new GameObject();
         Targeting targeting = tower.addBehaviour(new Targeting(100));
-        tower.addBehaviour(new FireControl(targeting, (origin, dir, t, w) -> shots[0]++, 10));
+        tower.addBehaviour(new FireControl(
+                targeting,
+                (origin, dir, t, w) -> shots[0]++,
+                10,
+                TowerType.BASIC));
         scene.instantiate(() -> tower);
         scene.update(0.1); // đưa vào Scene
         scene.update(0.1); // Targeting tìm mục tiêu, FireControl bắn -> cooldown 10s
@@ -86,6 +94,7 @@ class BehaviourResetTest {
         scene.update(0.1);
 
         assertEquals(2, shots[0]);
+        assertEquals(2, shotEvents[0]);
     }
 
     @Test

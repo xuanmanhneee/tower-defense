@@ -19,7 +19,7 @@
 ### GameState (Singleton)
 | Member | Mô tả |
 |---|---|
-| `static GameState getInstance()` | Khởi tạo vàng 100, mạng 20. |
+| `static GameState getInstance()` | Khởi tạo vàng 100, mạng 10. |
 | `int getGold()`, `void addGold(int)`, `boolean spendGold(int)` | `spendGold` trả `false` nếu không đủ. |
 | `int getLives()`, `void loseLife(int)`, `boolean isGameOver()` | |
 
@@ -36,7 +36,7 @@
 |---|---|
 | `TILE_SIZE` | 32 |
 | `WINDOW_WIDTH` / `WINDOW_HEIGHT` | `TILE_SIZE*40` / `TILE_SIZE*24` |
-| `STARTING_GOLD` / `STARTING_LIVES` | 100 / 20 |
+| `STARTING_GOLD` / `STARTING_LIVES` | 100 / 10 |
 | `TOWER_SIZE_IN_TILES` | 2 |
 
 ## test

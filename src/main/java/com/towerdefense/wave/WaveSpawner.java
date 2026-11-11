@@ -5,6 +5,7 @@ import com.towerdefense.core.GameObject;
 import com.towerdefense.core.Prefab;
 import com.towerdefense.core.Scene;
 import com.towerdefense.core.Vector2;
+import com.towerdefense.event.WavesClearedEvent;
 
 import java.util.Collections;
 import java.util.IdentityHashMap;
@@ -98,6 +99,7 @@ public final class WaveSpawner {
 
         if (waveIndex >= waves.size() - 1) {
             state = WaveState.COMPLETED;
+            scene.getEventBus().publish(new WavesClearedEvent());
             return;
         }
 

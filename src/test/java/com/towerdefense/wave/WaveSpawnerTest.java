@@ -4,6 +4,7 @@ import com.towerdefense.behaviour.PathFollower;
 import com.towerdefense.core.GameObject;
 import com.towerdefense.core.Scene;
 import com.towerdefense.core.Vector2;
+import com.towerdefense.event.WavesClearedEvent;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -15,6 +16,8 @@ class WaveSpawnerTest {
     @Test
     void completesAfterEverySpawnedEnemyLeavesTheScene() {
         Scene scene = new Scene();
+        int[] clears = {0};
+        scene.getEventBus().subscribe(WavesClearedEvent.class, event -> clears[0]++);
         WaveSpawner spawner = createSpawner(scene, List.of(
                 wave(0, new SpawnGroupData("grunt", 2, 1))));
 
@@ -32,6 +35,8 @@ class WaveSpawnerTest {
 
         assertEquals(0, spawner.getActiveEnemyCount());
         assertEquals(WaveState.COMPLETED, spawner.getState());
+        spawner.update(0);
+        assertEquals(1, clears[0]);
     }
 
     @Test

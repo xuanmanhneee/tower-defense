@@ -150,6 +150,12 @@
     -fx-font-weight: 900;
 }
 
+.result-title {
+    -fx-text-fill: #f2fff6;
+    -fx-font-size: 54px;
+    -fx-font-weight: 900;
+}
+
 .pause-shortcut {
     -fx-text-fill: #6f887b;
     -fx-font-size: 11px;
