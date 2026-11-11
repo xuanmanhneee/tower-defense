@@ -1,0 +1,157 @@
+.root {
+    -fx-font-family: "Segoe UI", sans-serif;
+}
+
+.menu-overlay {
+    -fx-background-color:
+        radial-gradient(center 75% 20%, radius 65%, rgba(31, 92, 70, 0.42), transparent),
+        linear-gradient(to bottom right, #07110f 0%, #0d201a 48%, #050908 100%);
+    -fx-padding: 48px;
+}
+
+.menu-card {
+    -fx-padding: 48px 56px;
+    -fx-background-color: rgba(7, 16, 14, 0.88);
+    -fx-background-radius: 18px;
+    -fx-border-color: rgba(136, 255, 190, 0.22);
+    -fx-border-width: 1px;
+    -fx-border-radius: 18px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.62), 36, 0.18, 0, 14);
+}
+
+.menu-eyebrow {
+    -fx-text-fill: #77e6a4;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.menu-title {
+    -fx-text-fill: #f2fff6;
+    -fx-font-size: 62px;
+    -fx-font-weight: 900;
+    -fx-line-spacing: -10px;
+    -fx-text-alignment: center;
+    -fx-effect: dropshadow(gaussian, rgba(77, 255, 148, 0.2), 20, 0.15, 0, 0);
+}
+
+.menu-subtitle {
+    -fx-text-fill: #91a69a;
+    -fx-font-size: 15px;
+    -fx-padding: 0 0 24px 0;
+}
+
+.menu-button {
+    -fx-min-width: 270px;
+    -fx-min-height: 52px;
+    -fx-background-color: rgba(255, 255, 255, 0.055);
+    -fx-background-radius: 9px;
+    -fx-border-color: rgba(255, 255, 255, 0.13);
+    -fx-border-radius: 9px;
+    -fx-text-fill: #dce9e0;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.menu-button:hover {
+    -fx-background-color: rgba(119, 230, 164, 0.14);
+    -fx-border-color: rgba(119, 230, 164, 0.62);
+    -fx-text-fill: white;
+}
+
+.menu-button:pressed {
+    -fx-translate-y: 1px;
+}
+
+.menu-button-primary {
+    -fx-background-color: #61d892;
+    -fx-border-color: #8ff0b5;
+    -fx-text-fill: #07110d;
+}
+
+.menu-button-primary:hover {
+    -fx-background-color: #7be5a6;
+    -fx-text-fill: #07110d;
+}
+
+.menu-button-danger:hover {
+    -fx-background-color: rgba(239, 83, 80, 0.14);
+    -fx-border-color: rgba(239, 83, 80, 0.62);
+}
+
+.settings-card {
+    -fx-padding: 42px 48px;
+}
+
+.settings-title {
+    -fx-text-fill: #f2fff6;
+    -fx-font-size: 38px;
+    -fx-font-weight: 900;
+}
+
+.settings-section-label {
+    -fx-text-fill: #77e6a4;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.settings-checkbox {
+    -fx-text-fill: #dce9e0;
+    -fx-font-size: 15px;
+    -fx-padding: 10px 0 26px 0;
+}
+
+.settings-checkbox .box {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-border-color: rgba(255, 255, 255, 0.22);
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+
+.settings-checkbox:selected .mark {
+    -fx-background-color: #07110d;
+}
+
+.settings-checkbox:selected .box {
+    -fx-background-color: #61d892;
+    -fx-border-color: #8ff0b5;
+}
+
+.pause-button {
+    -fx-min-width: 112px;
+    -fx-min-height: 42px;
+    -fx-background-color: rgba(5, 15, 12, 0.93);
+    -fx-background-radius: 10px;
+    -fx-border-color: rgba(112, 221, 160, 0.42);
+    -fx-border-radius: 10px;
+    -fx-text-fill: #dff6e7;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.pause-button:hover {
+    -fx-background-color: #173c2b;
+    -fx-border-color: #70dda0;
+}
+
+.pause-overlay {
+    -fx-background-color: rgba(1, 7, 5, 0.76);
+    -fx-padding: 48px;
+}
+
+.pause-card {
+    -fx-padding: 46px 54px;
+}
+
+.pause-title {
+    -fx-text-fill: #f2fff6;
+    -fx-font-size: 48px;
+    -fx-font-weight: 900;
+}
+
+.pause-shortcut {
+    -fx-text-fill: #6f887b;
+    -fx-font-size: 11px;
+    -fx-padding: 10px 0 0 0;
+}

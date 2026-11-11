@@ -9,4 +9,7 @@ public interface UIScreen {
     void render(GraphicsContext graphics);
 
     boolean handleClick(double x, double y);
+
+    default void handleMouseMove(double x, double y) {
+    }
 }

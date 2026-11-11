@@ -40,6 +40,12 @@ public class UIManager {
         return false;
     }
 
+    public void handleMouseMove(double x, double y) {
+        for (UIScreen screen : screens) {
+            screen.handleMouseMove(x, y);
+        }
+    }
+
     public void showTowerSelection(
             List<TowerOption> towers,
             Consumer<TowerOption> onSelected) {

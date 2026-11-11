@@ -15,10 +15,11 @@ public class FpsOverlayScreen implements UIScreen {
     private double displayedFps;
     private double elapsed;
     private int frames;
+    private boolean visible;
 
     @Override
     public void update(double deltaTime) {
-        if (deltaTime <= 0) {
+        if (!visible || deltaTime <= 0) {
             return;
         }
 
@@ -33,6 +34,10 @@ public class FpsOverlayScreen implements UIScreen {
 
     @Override
     public void render(GraphicsContext graphics) {
+        if (!visible) {
+            return;
+        }
+
         double x = GameConfig.WINDOW_WIDTH - WIDTH - MARGIN;
         double y = MARGIN;
 
@@ -45,5 +50,9 @@ public class FpsOverlayScreen implements UIScreen {
     @Override
     public boolean handleClick(double x, double y) {
         return false;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 }

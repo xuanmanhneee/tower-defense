@@ -10,6 +10,8 @@ import com.towerdefense.scene.GameScene;
 import com.towerdefense.ui.GameHudScreen;
 import com.towerdefense.ui.DebugPanelScreen;
 import com.towerdefense.ui.FpsOverlayScreen;
+import com.towerdefense.ui.MainMenuView;
+import com.towerdefense.ui.PauseMenuView;
 import com.towerdefense.ui.TowerOption;
 import com.towerdefense.ui.TowerSelectionScreen;
 import com.towerdefense.ui.UIManager;
@@ -18,9 +20,14 @@ import java.util.Arrays;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class App extends Application {
@@ -29,6 +36,10 @@ public class App extends Application {
     private static final int HEIGHT = GameConfig.WINDOW_HEIGHT;
 
     private long lastTime = 0;
+    private boolean playing;
+    private boolean paused;
+    private Button pauseButton;
+    private PauseMenuView pauseMenu;
 
     @Override
     public void start(Stage stage) {
@@ -59,9 +70,14 @@ public class App extends Application {
 
         DebugPanelScreen debugPanel = new DebugPanelScreen(DebugMetrics.getInstance());
         uiManager.addScreen(debugPanel);
-        uiManager.addScreen(new FpsOverlayScreen());
+
+        FpsOverlayScreen fpsOverlay = new FpsOverlayScreen();
+        uiManager.addScreen(fpsOverlay);
 
         gameCanvas.setOnMouseClicked(event -> {
+            if (!playing || paused) {
+                return;
+            }
             if (!uiManager.handleClick(event.getX(), event.getY())) {
                 gameScene.tryPlaceTower(
                         event.getX(),
@@ -69,16 +85,46 @@ public class App extends Application {
                         towerSelection.getSelectedTower());
             }
         });
+        gameCanvas.setOnMouseMoved(event ->
+                uiManager.handleMouseMove(event.getX(), event.getY()));
 
         MapRenderer mapRenderer = new MapRenderer();
         GameRenderer gameRenderer = new GameRenderer(gameGraphics);
 
-        Pane root = new Pane(
+        pauseButton = new Button("Ⅱ  PAUSE");
+        pauseButton.getStyleClass().add("pause-button");
+        pauseButton.setVisible(false);
+        pauseButton.setManaged(false);
+        pauseButton.setOnAction(event -> setPaused(true));
+        StackPane.setAlignment(pauseButton, Pos.TOP_RIGHT);
+        StackPane.setMargin(pauseButton, new Insets(20));
+
+        pauseMenu = new PauseMenuView(
+                () -> setPaused(false),
+                Platform::exit);
+
+        MainMenuView mainMenu = new MainMenuView(
+                this::startGame,
+                fpsOverlay::setVisible,
+                Platform::exit);
+
+        StackPane root = new StackPane(
                 gameCanvas,
-                uiCanvas);
+                uiCanvas,
+                pauseButton,
+                mainMenu,
+                pauseMenu);
 
         javafx.scene.Scene fxScene = new javafx.scene.Scene(root, WIDTH, HEIGHT);
-        fxScene.setOnKeyPressed(event -> debugPanel.handleKeyPressed(event.getCode()));
+        fxScene.getStylesheets().add(
+                App.class.getResource("/ui/menu.css").toExternalForm());
+        fxScene.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ESCAPE && playing) {
+                setPaused(!paused);
+                return;
+            }
+            debugPanel.handleKeyPressed(event.getCode());
+        });
 
         stage.setTitle("Tower Defense");
         stage.setResizable(false);
@@ -100,7 +146,13 @@ public class App extends Application {
 
                 lastTime = now;
 
-                gameScene.update(deltaTime);
+                if (!playing) {
+                    return;
+                }
+
+                if (!paused) {
+                    gameScene.update(deltaTime);
+                }
 
                 gameGraphics.clearRect(0, 0, WIDTH, HEIGHT);
 
@@ -119,6 +171,30 @@ public class App extends Application {
         };
 
         gameLoop.start();
+    }
+
+    private void startGame() {
+        playing = true;
+        paused = false;
+        pauseButton.setManaged(true);
+        pauseButton.setVisible(true);
+    }
+
+    private void setPaused(boolean paused) {
+        if (!playing) {
+            return;
+        }
+
+        this.paused = paused;
+        if (paused) {
+            pauseButton.setVisible(false);
+            pauseButton.setManaged(false);
+            pauseMenu.showMenu();
+        } else {
+            pauseMenu.hideMenu();
+            pauseButton.setManaged(true);
+            pauseButton.setVisible(true);
+        }
     }
 
     public static void main(String[] args) {
