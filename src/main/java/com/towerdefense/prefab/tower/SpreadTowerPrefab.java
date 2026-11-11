@@ -19,6 +19,11 @@ public class SpreadTowerPrefab extends TowerPrefab {
     }
 
     @Override
+    protected com.towerdefense.entity.tower.TowerType towerType() {
+        return com.towerdefense.entity.tower.TowerType.SPREAD;
+    }
+
+    @Override
     protected Color color() {
         return Color.web("#66bb6a");
     }

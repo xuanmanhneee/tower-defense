@@ -37,7 +37,7 @@ public class App extends Application {
 
     private long lastTime = 0;
     private boolean playing;
-    private boolean paused;
+    private GameScene gameScene;
     private Button pauseButton;
     private PauseMenuView pauseMenu;
 
@@ -52,7 +52,7 @@ public class App extends Application {
         GraphicsContext gameGraphics = gameCanvas.getGraphicsContext2D();
         GraphicsContext uiGraphics = uiCanvas.getGraphicsContext2D();
 
-        GameScene gameScene = new GameScene();
+        gameScene = new GameScene();
         UIManager uiManager = new UIManager();
 
         TowerSelectionScreen towerSelection = new TowerSelectionScreen(
@@ -75,7 +75,7 @@ public class App extends Application {
         uiManager.addScreen(fpsOverlay);
 
         gameCanvas.setOnMouseClicked(event -> {
-            if (!playing || paused) {
+            if (!playing || gameScene.isPaused()) {
                 return;
             }
             if (!uiManager.handleClick(event.getX(), event.getY())) {
@@ -120,7 +120,7 @@ public class App extends Application {
                 App.class.getResource("/ui/menu.css").toExternalForm());
         fxScene.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ESCAPE && playing) {
-                setPaused(!paused);
+                setPaused(!gameScene.isPaused());
                 return;
             }
             debugPanel.handleKeyPressed(event.getCode());
@@ -150,9 +150,7 @@ public class App extends Application {
                     return;
                 }
 
-                if (!paused) {
-                    gameScene.update(deltaTime);
-                }
+                gameScene.update(deltaTime);
 
                 gameGraphics.clearRect(0, 0, WIDTH, HEIGHT);
 
@@ -175,7 +173,7 @@ public class App extends Application {
 
     private void startGame() {
         playing = true;
-        paused = false;
+        setPaused(false);
         pauseButton.setManaged(true);
         pauseButton.setVisible(true);
     }
@@ -185,7 +183,9 @@ public class App extends Application {
             return;
         }
 
-        this.paused = paused;
+        if (gameScene.isPaused() != paused) {
+            gameScene.togglePause();
+        }
         if (paused) {
             pauseButton.setVisible(false);
             pauseButton.setManaged(false);

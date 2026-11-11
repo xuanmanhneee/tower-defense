@@ -5,8 +5,8 @@ import com.towerdefense.behaviour.Targeting;
 import com.towerdefense.core.GameObject;
 import com.towerdefense.core.Prefab;
 import com.towerdefense.entity.tower.fire.FireStrategy;
-import com.towerdefense.render.DiscRenderer;
-import com.towerdefense.render.RenderLayer;
+import com.towerdefense.entity.tower.TowerType;
+import com.towerdefense.render.TowerRenderer;
 
 import javafx.scene.paint.Color;
 
@@ -29,6 +29,8 @@ public abstract class TowerPrefab implements Prefab {
         return Color.CRIMSON;
     }
 
+    protected abstract TowerType towerType();
+
     // Factory method: bắt buộc lớp con quyết định
     protected abstract FireStrategy createFireStrategy();
 
@@ -36,7 +38,7 @@ public abstract class TowerPrefab implements Prefab {
     @Override
     public final GameObject instantiate() {
         GameObject tower = new GameObject();
-        tower.addBehaviour(new DiscRenderer(RenderLayer.TOWER, color(), radius()));
+        tower.addBehaviour(new TowerRenderer(towerType()));
         Targeting targeting = tower.addBehaviour(new Targeting(range()));
         tower.addBehaviour(new FireControl(targeting, createFireStrategy(), fireInterval()));
         return tower;

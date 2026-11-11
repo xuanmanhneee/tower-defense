@@ -69,4 +69,16 @@ public class PathFollower extends Behaviour {
         this.waypoints = waypoints;
         this.currentIndex = 1;
     }
+
+    public Vector2 getCurrentDirection() {
+        if (currentIndex < waypoints.size() && gameObject != null) {
+            Vector2 target = waypoints.get(currentIndex);
+            Vector2 position = gameObject.getTransform().getPosition();
+            Vector2 diff = target.subtract(position);
+            if (diff.lengthSquared() > 1e-4) {
+                return diff.normalized();
+            }
+        }
+        return new Vector2(1, 0);
+    }
 }

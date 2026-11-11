@@ -14,5 +14,6 @@ Chạy: `mvn javafx:run`. Gốc package: `com.towerdefense`.
 | [render.md](render.md) | `render` | Vẽ Canvas |
 | [ui.md](ui.md) | `ui` | Màn hình UI |
 | [game.md](game.md) | `scene`, `game`, `event`, `config`, `App` | Điều phối game, trạng thái, sự kiện, hằng số |
+| [design-patterns.md](design-patterns.md) | — | Các design pattern dùng trong game và cách chúng gắn với code |
 
 Tài liệu liên quan: [../PLAN.md](../PLAN.md) (kế hoạch), [../CORE_API.md](../CORE_API.md) (phân tích core).
